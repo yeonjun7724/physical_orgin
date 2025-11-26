@@ -1,0 +1,29 @@
+:root {
+  /* 파란 계열 색상 */
+  --main-blue: #4c84af;
+  --accent-blue: #81bfc7;
+  --light-blue: #e3f2fd;
+  --medium-blue: #64b5f6;
+  --dark-blue: #1976d2;
+  --blue-bg: #f0f7fa;
+
+  /* 기타 색상 */
+  --warning-red: #f44336;
+  --neutral-gray: #e0e0e0;
+
+  /* 텍스트 색상 */
+  --text-dark: #222;
+  --text-light: #fafafa;
+  --text-gray: #666;
+  --text-light-gray: #999;
+
+  /* 배경 색상 */
+  --bg-light: #f9f9f9;
+  --bg-white: #ffffff;
+  --border-light: #eee;
+}
+
+body {
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+}
