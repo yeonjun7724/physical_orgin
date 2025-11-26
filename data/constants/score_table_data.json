@@ -1,0 +1,156 @@
+[
+  {
+    "age_group": "20-24",
+    "gender": "M",
+    "event": "pushup",
+    "grade_1": 62,
+    "grade_2": 51,
+    "grade_3": 38,
+    "grade_4": 24,
+    "grade_5": 15,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "20-24",
+    "gender": "F",
+    "event": "pushup",
+    "grade_1": 45,
+    "grade_2": 35,
+    "grade_3": 25,
+    "grade_4": 15,
+    "grade_5": 8,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "25-29",
+    "gender": "M",
+    "event": "pushup",
+    "grade_1": 58,
+    "grade_2": 48,
+    "grade_3": 35,
+    "grade_4": 22,
+    "grade_5": 13,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "25-29",
+    "gender": "F",
+    "event": "pushup",
+    "grade_1": 42,
+    "grade_2": 32,
+    "grade_3": 23,
+    "grade_4": 14,
+    "grade_5": 7,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "20-24",
+    "gender": "M",
+    "event": "situp",
+    "grade_1": 55,
+    "grade_2": 45,
+    "grade_3": 35,
+    "grade_4": 25,
+    "grade_5": 15,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "20-24",
+    "gender": "F",
+    "event": "situp",
+    "grade_1": 50,
+    "grade_2": 40,
+    "grade_3": 30,
+    "grade_4": 20,
+    "grade_5": 12,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "20-24",
+    "gender": "M",
+    "event": "squat",
+    "grade_1": 65,
+    "grade_2": 55,
+    "grade_3": 45,
+    "grade_4": 35,
+    "grade_5": 25,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "20-24",
+    "gender": "F",
+    "event": "squat",
+    "grade_1": 60,
+    "grade_2": 50,
+    "grade_3": 40,
+    "grade_4": 30,
+    "grade_5": 20,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "20-24",
+    "gender": "M",
+    "event": "balance",
+    "grade_1": 90,
+    "grade_2": 75,
+    "grade_3": 60,
+    "grade_4": 45,
+    "grade_5": 30,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "20-24",
+    "gender": "F",
+    "event": "balance",
+    "grade_1": 85,
+    "grade_2": 70,
+    "grade_3": 55,
+    "grade_4": 40,
+    "grade_5": 25,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "20-24",
+    "gender": "M",
+    "event": "kneelift",
+    "grade_1": 60,
+    "grade_2": 50,
+    "grade_3": 40,
+    "grade_4": 30,
+    "grade_5": 20,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "20-24",
+    "gender": "F",
+    "event": "kneelift",
+    "grade_1": 55,
+    "grade_2": 45,
+    "grade_3": 35,
+    "grade_4": 25,
+    "grade_5": 15,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "20-24",
+    "gender": "M",
+    "event": "trunkFlex",
+    "grade_1": 50,
+    "grade_2": 40,
+    "grade_3": 30,
+    "grade_4": 20,
+    "grade_5": 10,
+    "source_version": "2024.05 공식표"
+  },
+  {
+    "age_group": "20-24",
+    "gender": "F",
+    "event": "trunkFlex",
+    "grade_1": 55,
+    "grade_2": 45,
+    "grade_3": 35,
+    "grade_4": 25,
+    "grade_5": 15,
+    "source_version": "2024.05 공식표"
+  }
+]

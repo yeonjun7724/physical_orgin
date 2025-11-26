@@ -1,0 +1,226 @@
+[
+  {
+    "user_id": "user_001",
+    "push_enabled": true,
+    "email_enabled": true,
+    "notification_types": {
+      "measurement_reminder": {
+        "enabled": true,
+        "time": "09:00",
+        "frequency": "daily"
+      },
+      "streak_reminder": {
+        "enabled": true,
+        "time": "20:00",
+        "frequency": "daily"
+      },
+      "badge_earned": {
+        "enabled": true
+      },
+      "ranking_update": {
+        "enabled": true,
+        "frequency": "weekly"
+      },
+      "new_challenge": {
+        "enabled": true
+      },
+      "points_earned": {
+        "enabled": false
+      }
+    },
+    "updated_at": "2024-12-15T10:00:00Z"
+  },
+  {
+    "user_id": "user_002",
+    "push_enabled": true,
+    "email_enabled": false,
+    "notification_types": {
+      "measurement_reminder": {
+        "enabled": true,
+        "time": "08:00",
+        "frequency": "daily"
+      },
+      "streak_reminder": {
+        "enabled": true,
+        "time": "19:00",
+        "frequency": "daily"
+      },
+      "badge_earned": {
+        "enabled": true
+      },
+      "ranking_update": {
+        "enabled": false,
+        "frequency": "weekly"
+      },
+      "new_challenge": {
+        "enabled": true
+      },
+      "points_earned": {
+        "enabled": true
+      }
+    },
+    "updated_at": "2024-12-10T09:00:00Z"
+  },
+  {
+    "user_id": "user_003",
+    "push_enabled": false,
+    "email_enabled": true,
+    "notification_types": {
+      "measurement_reminder": {
+        "enabled": false,
+        "time": "10:00",
+        "frequency": "daily"
+      },
+      "streak_reminder": {
+        "enabled": false,
+        "time": "21:00",
+        "frequency": "daily"
+      },
+      "badge_earned": {
+        "enabled": true
+      },
+      "ranking_update": {
+        "enabled": true,
+        "frequency": "weekly"
+      },
+      "new_challenge": {
+        "enabled": false
+      },
+      "points_earned": {
+        "enabled": false
+      }
+    },
+    "updated_at": "2024-12-20T15:00:00Z"
+  },
+  {
+    "user_id": "산들",
+    "push_enabled": true,
+    "email_enabled": true,
+    "notification_types": {
+      "measurement_reminder": {
+        "enabled": true,
+        "time": "09:00",
+        "frequency": "daily"
+      },
+      "streak_reminder": {
+        "enabled": true,
+        "time": "20:00",
+        "frequency": "daily"
+      },
+      "badge_earned": {
+        "enabled": true
+      },
+      "ranking_update": {
+        "enabled": true,
+        "frequency": "weekly"
+      },
+      "new_challenge": {
+        "enabled": true
+      },
+      "points_earned": {
+        "enabled": true
+      }
+    },
+    "updated_at": "2025-11-16T09:30:11.134365Z"
+  },
+  {
+    "user_id": "user_홍길동",
+    "push_enabled": true,
+    "email_enabled": true,
+    "notification_types": {
+      "measurement_reminder": {
+        "enabled": true,
+        "time": "09:00",
+        "frequency": "daily"
+      },
+      "streak_reminder": {
+        "enabled": true,
+        "time": "20:00",
+        "frequency": "daily"
+      },
+      "badge_earned": {
+        "enabled": true
+      },
+      "ranking_update": {
+        "enabled": true,
+        "frequency": "weekly"
+      },
+      "new_challenge": {
+        "enabled": true
+      },
+      "points_earned": {
+        "enabled": true
+      }
+    },
+    "updated_at": "2025-11-16T09:51:51.498671Z"
+  },
+  {
+    "user_id": "user_dodo",
+    "push_enabled": true,
+    "email_enabled": true,
+    "notification_types": {
+      "measurement_reminder": {
+        "enabled": true,
+        "time": "09:00",
+        "frequency": "daily"
+      },
+      "streak_reminder": {
+        "enabled": true,
+        "time": "20:00",
+        "frequency": "daily"
+      },
+      "badge_earned": {
+        "enabled": true
+      },
+      "ranking_update": {
+        "enabled": true,
+        "frequency": "weekly"
+      },
+      "new_challenge": {
+        "enabled": true
+      },
+      "points_earned": {
+        "enabled": true
+      },
+      "weekly_report": {
+        "enabled": true
+      },
+      "event_promotion": {
+        "enabled": false
+      }
+    },
+    "updated_at": "2025-11-24T02:04:07.404524Z",
+    "email": "user_dodo@example.com"
+  },
+  {
+    "user_id": "user_sandra",
+    "push_enabled": true,
+    "email_enabled": true,
+    "notification_types": {
+      "measurement_reminder": {
+        "enabled": true,
+        "time": "09:00",
+        "frequency": "daily"
+      },
+      "streak_reminder": {
+        "enabled": true,
+        "time": "20:00",
+        "frequency": "daily"
+      },
+      "badge_earned": {
+        "enabled": true
+      },
+      "ranking_update": {
+        "enabled": true,
+        "frequency": "weekly"
+      },
+      "new_challenge": {
+        "enabled": true
+      },
+      "points_earned": {
+        "enabled": true
+      }
+    },
+    "updated_at": "2025-11-24T02:26:12.474517Z"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "user_id": "user_001",
+    "current_streak": 5,
+    "longest_streak": 12,
+    "last_measurement_date": "2024-12-20",
+    "streak_start_date": "2024-12-16",
+    "updated_at": "2024-12-20T10:01:30Z"
+  },
+  {
+    "user_id": "user_002",
+    "current_streak": 3,
+    "longest_streak": 8,
+    "last_measurement_date": "2024-12-20",
+    "streak_start_date": "2024-12-18",
+    "updated_at": "2024-12-20T14:01:15Z"
+  },
+  {
+    "user_id": "user_003",
+    "current_streak": 1,
+    "longest_streak": 1,
+    "last_measurement_date": "2024-12-20",
+    "streak_start_date": "2024-12-20",
+    "updated_at": "2024-12-20T15:00:45Z"
+  },
+  {
+    "user_id": "산들",
+    "current_streak": 0,
+    "longest_streak": 0,
+    "last_measurement_date": null,
+    "streak_start_date": null,
+    "updated_at": "2025-11-16T09:30:11.128853Z"
+  },
+  {
+    "user_id": "user_홍길동",
+    "current_streak": 0,
+    "longest_streak": 0,
+    "last_measurement_date": null,
+    "streak_start_date": null,
+    "updated_at": "2025-11-16T09:51:51.493059Z"
+  },
+  {
+    "user_id": "user_dodo",
+    "current_streak": 0,
+    "longest_streak": 0,
+    "last_measurement_date": null,
+    "streak_start_date": null,
+    "updated_at": "2025-11-24T01:51:34.609347Z"
+  },
+  {
+    "user_id": "user_sandra",
+    "current_streak": 0,
+    "longest_streak": 0,
+    "last_measurement_date": null,
+    "streak_start_date": null,
+    "updated_at": "2025-11-24T02:26:12.465014Z"
+  }
+]
