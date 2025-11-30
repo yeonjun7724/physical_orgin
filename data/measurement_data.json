@@ -1,80 +1,16 @@
-[
-  {
-    "session_id": "session_001",
-    "user_id": "user_001",
-    "event": "pushup",
-    "started_at": "2024-12-20T10:00:00Z",
-    "ended_at": "2024-12-20T10:01:30Z",
-    "device_info": {
-      "browser": "Chrome",
-      "os": "Windows",
-      "version": "120.0"
-    },
-    "status": "completed"
-  },
-  {
-    "session_id": "session_002",
-    "user_id": "user_001",
-    "event": "situp",
-    "started_at": "2024-12-20T11:00:00Z",
-    "ended_at": "2024-12-20T11:02:00Z",
-    "device_info": {
-      "browser": "Chrome",
-      "os": "Windows",
-      "version": "120.0"
-    },
-    "status": "completed"
-  },
-  {
-    "session_id": "session_003",
-    "user_id": "user_002",
-    "event": "squat",
-    "started_at": "2024-12-20T14:00:00Z",
-    "ended_at": "2024-12-20T14:01:15Z",
-    "device_info": {
-      "browser": "Safari",
-      "os": "iOS",
-      "version": "17.0"
-    },
-    "status": "completed"
-  },
-  {
-    "session_id": "session_004",
-    "user_id": "user_003",
-    "event": "balance",
-    "started_at": "2024-12-20T15:00:00Z",
-    "ended_at": "2024-12-20T15:00:45Z",
-    "device_info": {
-      "browser": "Chrome",
-      "os": "Android",
-      "version": "119.0"
-    },
-    "status": "aborted"
-  },
-  {
-    "session_id": "session_005",
-    "user_id": "user_001",
-    "event": "kneelift",
-    "started_at": "2024-12-19T09:00:00Z",
-    "ended_at": "2024-12-19T09:01:00Z",
-    "device_info": {
-      "browser": "Chrome",
-      "os": "Windows",
-      "version": "120.0"
-    },
-    "status": "completed"
-  },
-  {
-    "session_id": "session_006",
-    "user_id": "user_002",
-    "event": "trunkFlex",
-    "started_at": "2024-12-19T16:00:00Z",
-    "ended_at": "2024-12-19T16:00:35Z",
-    "device_info": {
-      "browser": "Safari",
-      "os": "iOS",
-      "version": "17.0"
-    },
-    "status": "completed"
-  }
-]
+{
+  "sessions": [
+    {
+      "session_id": "uuid-456",
+      "user_id": "uuid-123",
+      "event": "pushup",
+      "started_at": "2025-11-29T15:30:00",
+      "ended_at": "2025-11-29T15:31:10",
+      "device_info": {
+        "browser": "Chrome",
+        "os": "Windows"
+      },
+      "status": "completed"
+    }
+  ]
+}

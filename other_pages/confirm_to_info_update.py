@@ -1,7 +1,6 @@
 """내정보 수정 비밀번호 확인 페이지"""
 import streamlit as st
 from utils.app_common import setup_common
-from components.common import PageHeader
 from components.common.section_card import SectionCard, CloseSectionCard
 
 # 공통 설정 적용
@@ -10,8 +9,6 @@ setup_common()
 
 def render(go_to):
    """비밀번호 확인 페이지 렌더링"""
-   PageHeader("비밀번호 확인", "내정보 수정을 위해 비밀번호를 입력해주세요.", "🔒")
-   
    SectionCard("🔐 비밀번호 확인")
    
    st.markdown("내정보를 수정하려면 비밀번호 확인이 필요합니다.")

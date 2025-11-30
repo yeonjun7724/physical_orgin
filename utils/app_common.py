@@ -1,6 +1,5 @@
 """공통 설정 및 유틸리티"""
 import streamlit as st
-from components.common import AppHeader
 from utils.auth_handler import check_auth_and_show_login
 from service import (
    InventoryService, PointsService, ProfileService, 
@@ -95,6 +94,4 @@ def setup_common():
    # 전역 스타일 적용
    style.apply_global_css()
    
-   # 공통 헤더 렌더링
-   AppHeader()
 

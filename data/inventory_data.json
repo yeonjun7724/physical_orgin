@@ -1,178 +1,24 @@
 [
   {
-    "user_id": "user_001",
-    "item_name": "기본 아바타",
-    "item_category": "아바타",
-    "item_icon": "👤",
-    "item_description": "기본 제공 아바타",
-    "price": 0,
-    "equipped": false,
-    "acquired_at": "2024-01-15T10:30:00Z",
-    "acquired_method": "default"
-  },
-  {
-    "user_id": "user_001",
-    "item_name": "기본 프레임",
-    "item_category": "프레임",
-    "item_icon": "📄",
-    "item_description": "기본 제공 프레임",
-    "price": 0,
-    "equipped": true,
-    "acquired_at": "2024-01-15T10:30:00Z",
-    "acquired_method": "default"
-  },
-  {
-    "user_id": "user_001",
-    "item_name": "운동맨",
-    "item_category": "아바타",
-    "item_icon": "💪",
-    "item_description": "근육질 아바타",
-    "price": 500,
-    "equipped": true,
-    "acquired_at": "2024-12-15T10:30:00Z",
-    "acquired_method": "purchase"
-  },
-  {
-    "user_id": "user_001",
-    "item_name": "골든 프레임",
-    "item_category": "프레임",
-    "item_icon": "✨",
-    "item_description": "황금색 테두리 프레임",
-    "price": 300,
-    "equipped": false,
-    "acquired_at": "2024-12-16T14:20:00Z",
-    "acquired_method": "purchase"
-  },
-  {
-    "user_id": "user_002",
-    "item_name": "기본 아바타",
-    "item_category": "아바타",
-    "item_icon": "👤",
-    "item_description": "기본 제공 아바타",
-    "price": 0,
-    "equipped": false,
-    "acquired_at": "2024-02-20T09:15:00Z",
-    "acquired_method": "default"
-  },
-  {
-    "user_id": "user_002",
-    "item_name": "기본 프레임",
-    "item_category": "프레임",
-    "item_icon": "📄",
-    "item_description": "기본 제공 프레임",
-    "price": 0,
-    "equipped": true,
-    "acquired_at": "2024-02-20T09:15:00Z",
-    "acquired_method": "default"
-  },
-  {
-    "user_id": "user_002",
-    "item_name": "달리기왕",
-    "item_category": "아바타",
-    "item_icon": "🏃",
-    "item_description": "러닝 전문가 아바타",
-    "price": 550,
-    "equipped": true,
-    "acquired_at": "2024-12-17T09:15:00Z",
-    "acquired_method": "purchase"
-  },
-  {
-    "user_id": "user_002",
-    "item_name": "레인보우 프레임",
-    "item_category": "프레임",
-    "item_icon": "🌈",
-    "item_description": "무지개색 프레임",
-    "price": 400,
-    "equipped": false,
-    "acquired_at": "2024-12-18T11:45:00Z",
-    "acquired_method": "purchase"
-  },
-  {
-    "user_id": "산들",
+    "user_id": "user_강산들",
     "item_name": "기본 아바타",
     "item_category": "아바타",
     "item_icon": "👤",
     "item_description": "기본 제공 아바타",
     "price": 0,
     "equipped": true,
-    "acquired_at": "2025-11-16T09:30:11.076289Z",
+    "acquired_at": "2025-11-30T09:59:15.932245Z",
     "acquired_method": "default"
   },
   {
-    "user_id": "산들",
+    "user_id": "user_강산들",
     "item_name": "기본 프레임",
     "item_category": "프레임",
     "item_icon": "📄",
     "item_description": "기본 제공 프레임",
     "price": 0,
     "equipped": true,
-    "acquired_at": "2025-11-16T09:30:11.088302Z",
-    "acquired_method": "default"
-  },
-  {
-    "user_id": "user_홍길동",
-    "item_name": "기본 아바타",
-    "item_category": "아바타",
-    "item_icon": "👤",
-    "item_description": "기본 제공 아바타",
-    "price": 0,
-    "equipped": true,
-    "acquired_at": "2025-11-16T09:51:51.445123Z",
-    "acquired_method": "default"
-  },
-  {
-    "user_id": "user_홍길동",
-    "item_name": "기본 프레임",
-    "item_category": "프레임",
-    "item_icon": "📄",
-    "item_description": "기본 제공 프레임",
-    "price": 0,
-    "equipped": true,
-    "acquired_at": "2025-11-16T09:51:51.454924Z",
-    "acquired_method": "default"
-  },
-  {
-    "user_id": "user_dodo",
-    "item_name": "기본 아바타",
-    "item_category": "아바타",
-    "item_icon": "👤",
-    "item_description": "기본 제공 아바타",
-    "price": 0,
-    "equipped": true,
-    "acquired_at": "2025-11-24T01:51:34.554280Z",
-    "acquired_method": "default"
-  },
-  {
-    "user_id": "user_dodo",
-    "item_name": "기본 프레임",
-    "item_category": "프레임",
-    "item_icon": "📄",
-    "item_description": "기본 제공 프레임",
-    "price": 0,
-    "equipped": true,
-    "acquired_at": "2025-11-24T01:51:34.568220Z",
-    "acquired_method": "default"
-  },
-  {
-    "user_id": "user_sandra",
-    "item_name": "기본 아바타",
-    "item_category": "아바타",
-    "item_icon": "👤",
-    "item_description": "기본 제공 아바타",
-    "price": 0,
-    "equipped": true,
-    "acquired_at": "2025-11-24T02:26:12.404331Z",
-    "acquired_method": "default"
-  },
-  {
-    "user_id": "user_sandra",
-    "item_name": "기본 프레임",
-    "item_category": "프레임",
-    "item_icon": "📄",
-    "item_description": "기본 제공 프레임",
-    "price": 0,
-    "equipped": true,
-    "acquired_at": "2025-11-24T02:26:12.415106Z",
+    "acquired_at": "2025-11-30T09:59:15.938347Z",
     "acquired_method": "default"
   }
 ]

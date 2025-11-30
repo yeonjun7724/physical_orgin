@@ -27,7 +27,7 @@ class PointsService(BaseService):
         
         new_user_points = {
             "user_id": user_id,
-            "total_points": 0,
+            "total_points": 500,
             "earned_points": 0,
             "spent_points": 0,
             "last_updated": datetime.utcnow().isoformat() + "Z",

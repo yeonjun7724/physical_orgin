@@ -1,7 +1,6 @@
 """내 보관함 페이지"""
 import streamlit as st
 from utils.app_common import setup_common
-from components.common import PageHeader
 from components.common.section_card import SectionCard, CloseSectionCard
 from service import InventoryService
 
@@ -17,8 +16,6 @@ def render(go_to):
         return
     
     inventory_service = InventoryService()
-    
-    PageHeader("내 보관함", "구매한 아바타와 프레임을 확인하고 착용할 수 있습니다.", "📦")
     
     # 인벤토리에서 아이템 가져오기
     inventory = inventory_service.get_user_inventory(user_id)

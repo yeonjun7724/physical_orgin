@@ -1,6 +1,11 @@
 """인증 유틸리티"""
 import streamlit as st
 from service import AuthService, ProfileService
+import hashlib
+
+
+def hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
 
 
 def is_authenticated() -> bool:
@@ -8,67 +13,60 @@ def is_authenticated() -> bool:
     return st.session_state.get("authenticated", False)
 
 
-def login_user(username: str, email: str = None, password: str = None):
-    """사용자 로그인 처리"""
+def login_user(identifier: str, password: str):
+    """
+    이메일 또는 username(user_id 기반)으로 로그인
+    반드시 비밀번호가 일치해야 로그인 성공
+    """
     auth_service = AuthService()
-    
-    # 이메일로 사용자 찾기 (이메일이 제공된 경우)
-    user = None
-    if email:
-        user = auth_service.get_user_by_email(email)
-    
-    # 사용자명으로 사용자 찾기 (이메일로 못 찾은 경우)
+
+    # 1) 이메일로 찾기
+    user = auth_service.get_user_by_email(identifier)
+
+    # 2) 이메일 없으면 user_id(username 기반)
     if not user:
-        # 간단한 로그인: 사용자명을 user_id로 사용
-        user_id = f"user_{username.lower().replace(' ', '_')}"
+        user_id = f"user_{identifier.lower().replace(' ', '_')}"
         user = auth_service.get_user_by_id(user_id)
-        
-        # 사용자가 없으면 생성
-        if not user:
-            auth_service.create_user(
-                user_id=user_id,
-                name=username,
-                email=email or f"{user_id}@example.com",
-                password_hash="",  # 간단한 로그인에서는 비밀번호 해시 없음
-                provider="local"
-            )
-            user = auth_service.get_user_by_id(user_id)
-    
-    if user and user.get("is_active", True):
-        st.session_state.authenticated = True
-        st.session_state.user_id = user.get("id")
-        st.session_state.user_name = user.get("name", username)
-        
-        # 마지막 로그인 시간 업데이트
-        auth_service.update_last_login(user.get("id"))
-        
-        # 프로필이 없으면 기본 프로필 생성
-        profile_service = ProfileService()
-        profile = profile_service.get_profile_by_user_id(user.get("id"))
-        if not profile:
-            profile_service.create_profile(
-                user_id=user.get("id"),
-                nickname=username,
-                gender="M",
-                birth_year=1995,
-                age_group="20-24",
-                region="서울시-강남구",
-                avatar="👤"
-            )
 
+    # 3) 사용자 없음
+    if not user:
+        return False, "존재하지 않는 계정입니다."
 
-def require_auth():
-    """인증이 필요한 경우 로그인 페이지로 리다이렉트"""
-    if not is_authenticated():
-        return False
-    return True
+    # 4) 비활성 사용자
+    if not user.get("is_active", True):
+        return False, "비활성화된 계정입니다."
 
+    # 5) 비밀번호 검증
+    if user.get("password_hash") != hash_password(password):
+        return False, "비밀번호가 일치하지 않습니다."
+
+    # 6) 로그인 성공 처리
+    st.session_state.authenticated = True
+    st.session_state.user_id = user.get("id")
+    st.session_state.user_name = user.get("name")
+
+    auth_service.update_last_login(user.get("id"))
+
+    # 프로필 없으면 자동 생성
+    profile_service = ProfileService()
+    profile = profile_service.get_profile_by_user_id(user.get("id"))
+    if not profile:
+        profile_service.create_profile(
+            user_id=user.get("id"),
+            nickname=user.get("name"),
+            gender="M",
+            birth_year=1995,
+            age_group="20-24",
+            region="서울시-강남구",
+            avatar="👤"
+        )
+
+    return True, "로그인 성공"
 
 def get_current_user() -> dict:
     """현재 로그인한 사용자 정보 반환"""
     return {
         "user_id": st.session_state.get("user_id"),
-        "user_name": st.session_state.get("user_name", "체력왕"),
+        "user_name": st.session_state.get("user_name"),
         "authenticated": is_authenticated()
     }
-

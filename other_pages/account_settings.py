@@ -1,7 +1,6 @@
 """계정 설정 페이지"""
 import streamlit as st
 from utils.app_common import setup_common
-from components.common import PageHeader
 from components.common.section_card import SectionCard, CloseSectionCard
 
 # 공통 설정 적용
@@ -10,8 +9,6 @@ setup_common()
 
 def render(go_to):
    """계정 설정 페이지 렌더링"""
-   PageHeader("계정 설정", "비밀번호 변경 및 계정 삭제를 관리하세요.", "🔐")
-   
    # 비밀번호 변경
    SectionCard("🔑 비밀번호 변경")
    

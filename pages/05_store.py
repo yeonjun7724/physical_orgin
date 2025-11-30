@@ -1,9 +1,8 @@
 """상점 페이지"""
 import streamlit as st
 from utils.app_common import setup_common
-from components.common import PageHeader
 from components.common.section_card import SectionCard, CloseSectionCard
-from components.store import StoreItemGrid
+from components.cards.store_card import StoreItemGrid
 from service import PointsService
 
 # 공통 설정 적용

@@ -1,7 +1,7 @@
 """내정보 수정 페이지"""
 import streamlit as st
 from utils.app_common import setup_common
-from components.common import PageHeader, ProfileAvatar
+from components.common import ProfileAvatar
 from components.common.section_card import SectionCard, CloseSectionCard
 
 # 공통 설정 적용
@@ -14,8 +14,6 @@ if not st.session_state.get("info_update_verified", False):
 
 def render(go_to):
   """내정보 수정 페이지 렌더링"""
-  PageHeader("내정보 수정", "프로필 정보를 수정하세요.", "✏️")
-  
   # 로그인한 username 가져오기
   current_username = st.session_state.get("user_name", "체력왕")
   

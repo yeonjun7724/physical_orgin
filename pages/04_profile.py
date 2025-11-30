@@ -2,17 +2,17 @@
 import streamlit as st
 import pandas as pd
 from utils.app_common import setup_common
-from components.common import PageHeader, ProfileAvatar
+from components.common import ProfileAvatar
 from components.common.section_card import SectionCard, CloseSectionCard
-from components.profile import (
+from components.cards.profile_card import (
    StatCard, BadgeCard, GradeProgressBar, GradeCard, PointsCard, ActionButtonsRow
 )
 from service import (
    ProfileService, ResultService, BadgeService, UserBadgeService,
    PointsService, LeaderboardService, StreakService
 )
-from utils.constants import COLORS, GRADE_INFO
-
+from data.constants import COLORS
+from data.constants_exercise import GRADE_INFO
 # 공통 설정 적용
 setup_common()
 
@@ -56,7 +56,7 @@ def render(go_to):
    
    
    # 첫 번째 행: 프로필 사진 / 키몸무게 / FIT포인트
-   col1, col2, col3 = st.columns(3)
+   col1, col2, col3, col4 = st.columns(4)
    
    with col1:
       # 프로필 사진 영역
@@ -67,8 +67,12 @@ def render(go_to):
          level=100,
          show_info=False
       )
-   
+
    with col2:
+      if st.button("내정보 수정", use_container_width=True, type="primary"):
+         st.switch_page("other_pages/confirm_to_info_update.py")
+   
+   with col3:
       # 키, 몸무게, 나이, 성별, 레벨 정보
       user_age = profile.get("age_group", "20대")
       user_gender = "남성" if profile.get("gender") == "M" else "여성"
@@ -84,21 +88,11 @@ def render(go_to):
          f"**레벨:** Lv. {user_level}"
       )
    
-   with col3:
+   with col4:
       # FIT 포인트
       PointsCard(total_points, "FIT 포인트")
    
-   # 두 번째 행: 프로필사진변경 / 내정보수정 버튼
-   btn_col1, btn_col2 = st.columns(2)
-   
-   with btn_col1:
-      if st.button("프로필 사진 변경", use_container_width=True):
-         st.info("프로필 사진 변경 기능은 준비 중입니다.")
-   
-   with btn_col2:
-      if st.button("내정보 수정", use_container_width=True, type="primary"):
-         st.switch_page("other_pages/confirm_to_info_update.py")
-   
+
    # 세 번째 행: 종합점수 / 현재등급 / 전체순위
    stat_col1, stat_col2, stat_col3 = st.columns(3)
    

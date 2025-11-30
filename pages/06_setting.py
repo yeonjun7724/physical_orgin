@@ -17,7 +17,6 @@ def render(go_to):
       st.warning("로그인이 필요합니다.")
       return
 
-   st.markdown("## 알림 설정")
    notification_service = NotificationService()
    user_settings = notification_service.get_user_settings(user_id)
    
@@ -25,10 +24,11 @@ def render(go_to):
       notification_service.initialize_settings(user_id)
       user_settings = notification_service.get_user_settings(user_id)
    
+   st.markdown("---")
    # 이메일 설정 섹션
-   st.markdown("### 📧 이메일 알림 설정")
+
+   SectionCard("📧 이메일 알림 설정")
    st.markdown("알림을 받을 이메일 주소를 설정하세요.")
-   
    # 현재 사용자 이메일 가져오기 (auth_data에서)
    auth_service = AuthService()
    current_user = auth_service.get_user_by_id(user_id)
@@ -61,7 +61,9 @@ def render(go_to):
       key="email_notification_enabled",
       help="체크하면 설정한 이메일 주소로 알림을 받습니다"
    )
-   
+
+   CloseSectionCard()
+   st.markdown("---")
    # 알림 타입 매핑
    st.markdown("### 🔔 알림 종류 설정")
    notification_mapping = {
@@ -105,7 +107,7 @@ def render(go_to):
       st.rerun()
    
    CloseSectionCard()
-   
+   st.markdown("---")
    # 프라이버시 설정
    SectionCard("🔒 프라이버시 설정")
    
@@ -125,7 +127,6 @@ def render(go_to):
          help="다른 사용자들이 내 정보를 볼 수 있는지 설정합니다"
       )
    
-   st.markdown("### 데이터 수집 동의")
    data_collection = st.checkbox(
       "익명화된 데이터 수집에 동의합니다",
       value=st.session_state.get("data_collection_consent", False),
@@ -141,38 +142,48 @@ def render(go_to):
    
    CloseSectionCard()
    
+   st.markdown("---")
    # 데이터 관리
    SectionCard("📊 데이터 관리")
-   
    col1, col2 = st.columns(2)
    
    with col1:
-      st.markdown("### 데이터 내보내기")
-      st.markdown("모든 측정 데이터를 다운로드할 수 있습니다.")
-      if st.button("데이터 내보내기", use_container_width=True, type="primary"):
+      # 데이터 내보내기 박스
+      st.markdown(
+         """
+         <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; 
+                     border-left: 4px solid #4c84af; margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">데이터 내보내기</h3>
+            <p style="color: #666; margin-bottom: 1rem;">모든 측정 데이터를 다운로드할 수 있습니다.</p>
+         </div>
+         """,
+         unsafe_allow_html=True
+      )
+      if st.button("데이터 내보내기", use_container_width=True, type="primary", key="export_data"):
          st.info("데이터 내보내기 기능은 준비 중입니다. 곧 제공될 예정입니다.")
    
    with col2:
-      st.markdown("### 데이터 삭제")
-      st.markdown("모든 측정 데이터를 삭제할 수 있습니다.")
-      if st.button("데이터 삭제", use_container_width=True, type="secondary"):
+      # 데이터 삭제 박스
+      st.markdown(
+         """
+         <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; 
+                     border-left: 4px solid #f44336; margin-bottom: 1rem;">
+            <h3 style="margin-top: 0;">데이터 삭제</h3>
+            <p style="color: #666; margin-bottom: 1rem;">모든 측정 데이터를 삭제할 수 있습니다.</p>
+         </div>
+         """,
+         unsafe_allow_html=True
+      )
+      if st.button("데이터 삭제", use_container_width=True, type="secondary", key="delete_data"):
          st.warning("⚠️ 이 작업은 되돌릴 수 없습니다!")
          confirm = st.checkbox("정말로 모든 데이터를 삭제하시겠습니까?", key="confirm_delete")
          if confirm:
-            if st.button("삭제 확인", type="primary", use_container_width=True):
+            if st.button("삭제 확인", type="primary", use_container_width=True, key="confirm_delete_btn"):
                st.error("데이터 삭제 기능은 준비 중입니다.")
    
    CloseSectionCard()
-      
-   # 앱 정보
-   SectionCard("ℹ️ 앱 정보")
-   st.markdown("<h5>체력왕 FIT v1.0.0</h3>", unsafe_allow_html=True)
-   st.markdown("국민체력100 프로그램 기반 체력 측정 서비스")
-   st.markdown("개발: 체력왕 FIT 팀")
-   st.markdown("문의: support@stamina-king.fit")
-   st.markdown("웹사이트: www.stamina-king.fit")
-   
-   CloseSectionCard()
+   st.markdown("---")
+
 
 
 # 페이지가 직접 실행될 때 렌더링

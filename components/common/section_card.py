@@ -166,7 +166,7 @@ class _SectionCardImpl:
                     <div class="section-card-header section-card-collapsible" 
                         style="--card-gradient: {gradient};"
                         onclick="document.getElementById('{self._key}_toggle').click()">
-                        <h2 class="section-card-title">{title_text}</h2>
+                        <h3 class="section-card-title">{title_text}</h3>
                         <span class="section-card-toggle {'expanded' if expanded else ''}" style="--accent-color: {accent_color};">
                             {toggle_icon}
                         </span>
@@ -187,7 +187,7 @@ class _SectionCardImpl:
                 <div class="section-card-wrapper" style="margin-bottom: {self.margin_bottom};">
                     <div class="section-card-accent" style="--accent-color: {accent_color}; --accent-color-dark: {accent_color}88;"></div>
                     <div class="section-card-header" style="--card-gradient: {gradient};">
-                        <h2 class="section-card-title">{title_text}</h2>
+                        <h3 class="section-card-title">{title_text}</h3>
                     </div>
                     <div class="section-card-content" style="padding: {self.padding};">
                 """,
