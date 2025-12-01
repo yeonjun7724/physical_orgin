@@ -2,6 +2,34 @@
 import math
 import numpy as np
 
+
+def safe_age_to_int(age):
+    """나이값 문자열(예: '20-24') 등을 안전하게 정수로 변환"""
+    if isinstance(age, int) or isinstance(age, float):
+        return int(age)
+
+    if isinstance(age, str):
+        age = age.strip()
+
+        # "20-24" 같은 구간이면 중앙값 반환
+        if "-" in age:
+            try:
+                a, b = age.split("-")
+                return (int(a) + int(b)) // 2
+            except:
+                pass
+
+        # "23" 같은 값
+        try:
+            return int(age)
+        except:
+            pass
+
+    # 실패하면 기본값 25
+    return 25
+
+
+
 class PushupAnalyzerYolo:
     def __init__(self):
         self.prev_position = None  # "up" / "down"
@@ -10,10 +38,7 @@ class PushupAnalyzerYolo:
 
     @staticmethod
     def angle_3pts(a, b, c):
-        """
-        세 점 (a, b, c)의 각도 계산
-        a, b, c: [x, y, conf]
-        """
+        """세 점(a,b,c)의 각도 계산"""
         ax, ay = a[0], a[1]
         bx, by = b[0], b[1]
         cx, cy = c[0], c[1]
@@ -27,32 +52,24 @@ class PushupAnalyzerYolo:
         return ang
 
     def process_frame(self, keypoints):
-        """
-        한 프레임의 keypoints를 받아 팔꿈치 각도를 기반으로 팔굽혀펴기 상태/횟수 업데이트
-        COCO keypoint index 기준:
-          6: 오른쪽 어깨 (right_shoulder)
-          8: 오른쪽 팔꿈치 (right_elbow)
-          10: 오른쪽 손목 (right_wrist)
-        """
+        """YOLO keypoints로 1프레임 분석"""
         if keypoints is None:
             return
 
         try:
-            shoulder = keypoints[6]  # right_shoulder
-            elbow = keypoints[8]     # right_elbow
-            wrist = keypoints[10]    # right_wrist
+            shoulder = keypoints[6]
+            elbow = keypoints[8]
+            wrist = keypoints[10]
         except IndexError:
             return
 
-        # confidence 체크 (너무 낮으면 skip)
+        # 신뢰도 낮으면 skip
         if shoulder[2] < 0.3 or elbow[2] < 0.3 or wrist[2] < 0.3:
             return
 
         elbow_angle = self.angle_3pts(shoulder, elbow, wrist)
 
-        # Down / Up 기준 (예시 값, 나중에 튜닝 가능)
-        # - 내려갈 때: 팔꿈치 각도가 70도 이하
-        # - 올라왔을 때: 팔꿈치 각도가 150도 이상
+        # Down / Up 기준
         if elbow_angle < 70:
             current_position = "down"
         elif elbow_angle > 150:
@@ -60,11 +77,11 @@ class PushupAnalyzerYolo:
         else:
             current_position = self.prev_position
 
-        # down → up 변화할 때 1회 카운트
+        # down → up 시 카운트
         if self.prev_position == "down" and current_position == "up":
             self.pushup_count += 1
 
-        # 품질 점수: 90도 근처에서 얼마나 잘 내려갔는지 기준
+        # 품질 점수 (90도 기준)
         quality = max(0, 100 - abs(90 - elbow_angle))
         self.quality_scores.append(quality)
 
@@ -77,10 +94,13 @@ class PushupAnalyzerYolo:
 
     def calculate_kspo_grade(self, count, age, gender):
         """
-        국민체력100 팔굽혀펴기 기준을 단순화해서 등급화.
-        - 실제 KSPO 표를 그대로 가져와도 되지만, 여기서는 예시용 로직.
+        국민체력100 팔굽혀펴기 기준(축약판)으로 등급 계산
         """
-        # 단순 그룹화
+
+        # 🔥 age를 항상 정수로 변환 (에러 방지)
+        age = safe_age_to_int(age)
+
+        # 나이대 분류
         if age < 30:
             age_group = "20대"
         elif age < 40:
@@ -88,7 +108,7 @@ class PushupAnalyzerYolo:
         else:
             age_group = "40대"
 
-        # 예시 기준 (필요하면 실제 표로 교체)
+        # 기준치 테이블
         table_male = {
             "20대": [45, 40, 35, 30],
             "30대": [40, 35, 30, 25],
@@ -101,14 +121,15 @@ class PushupAnalyzerYolo:
             "40대": [25, 20, 15, 10],
         }
 
-        base = table_male if gender == "남" else table_female
-
-        if age_group not in base:
-            # 범위 밖이면 가장 낮은 기준 사용
-            thresholds = base["40대"]
+        if gender == "남":
+            base = table_male
         else:
-            thresholds = base[age_group]
+            base = table_female
 
+        # age_group이 테이블에 없으면 fallback
+        thresholds = base.get(age_group, base["40대"])
+
+        # 등급 판정
         if count >= thresholds[0]:
             return "1등급"
         elif count >= thresholds[1]:
