@@ -18,18 +18,19 @@ def render(go_to=None, **kwargs):
         st.info("푸시업 영상을 업로드하면 분석이 시작됩니다.")
         return
 
-    # 파일 이름 안전 처리 (개행, 특수문자 방지)
+    # 파일 이름 안전 처리
     safe_filename = uploaded_file.name.replace("\n", "_").replace("\r", "_")
 
-    # 사용자 정보
-    user_age = st.session_state.get("user_age", 25)
+    # 사용자 정보 — 반드시 정수로 변환
+    user_age = int(st.session_state.get("user_age", 25))
     user_gender = st.session_state.get("user_gender", "남")
 
-    # 브라우저 파일을 임시 파일로 저장
+    # 임시 파일 저장
     tfile = tempfile.NamedTemporaryFile(delete=False, suffix=safe_filename)
     tfile.write(uploaded_file.read())
     tfile.flush()
 
+    # 모델 초기화
     detector = YoloPoseDetector()
     analyzer = PushupAnalyzerYolo()
 
@@ -51,22 +52,30 @@ def render(go_to=None, **kwargs):
             break
 
         idx += 1
-        progress.progress(idx / total)
+        progress.progress(idx / max(total, 1))
 
         keypoints = detector.detect_keypoints(frame)
         analyzer.process_frame(keypoints)
 
     cap.release()
 
-    # 결과 출력
-    count = analyzer.pushup_count
-    quality = analyzer.avg_quality_score()
-    grade = analyzer.calculate_kspo_grade(count, user_age, user_gender)
+    # ----------- 🔥 타입 강제 변환 (가장 중요) ------------
+    count = int(analyzer.pushup_count)
+    quality = float(analyzer.avg_quality_score())
+    # -------------------------------------------------------
 
+    # 등급 계산
+    grade = analyzer.calculate_kspo_grade(
+        pushup_count=count,
+        age=user_age,
+        gender=user_gender
+    )
+
+    # 결과 출력
     st.subheader("📌 분석 결과")
     c1, c2, c3 = st.columns(3)
     c1.metric("횟수", f"{count}회")
-    c2.metric("자세 점수", f"{quality}/100")
+    c2.metric("자세 점수", f"{quality:.1f}/100")
     c3.metric("예상 등급", grade)
 
     st.markdown("---")
