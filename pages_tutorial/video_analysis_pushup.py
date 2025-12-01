@@ -4,7 +4,7 @@ import cv2
 from modules.pose_yolo import YoloPoseDetector
 from modules.pushup_analyzer_yolo import PushupAnalyzerYolo
 
-def render(go_to):
+def render(go_to=None, **kwargs):
 
     st.title("📊 푸시업 분석 (브라우저 기반)")
 
