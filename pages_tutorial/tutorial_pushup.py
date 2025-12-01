@@ -36,7 +36,7 @@ def render(go_to):
     
     st.markdown("---")
     
-    # 올바른 자세와 카메라 설정을 2열로 배치
+    # 올바른 자세와 예시 영상 + 업로드 기능을 2열로 배치
     col_left, col_right = st.columns(2)
     
     with col_left:
@@ -50,14 +50,29 @@ def render(go_to):
                     st.markdown(instruction)
     
     with col_right:
-        # 예시 영상 섹션
-        with section_card("예시 영상", icon="▶️", variant="default"):
-            st.info("올바른 자세는 아래 영상을 참고하세요")
-            
+        # 예시 영상 + 업로드 기능
+        with section_card("예시 영상 및 업로드", icon="📹", variant="default"):
+            st.info("올바른 자세는 아래 영상을 참고하거나 직접 영상을 업로드해 분석할 수 있습니다.")
+
+            # 예시 영상 URL (원하면 추가)
+            # st.video("https://your-example-video-url.mp4")
+
+            # ⭐ 영상 업로드
+            uploaded_file = st.file_uploader("팔굽혀펴기 영상 업로드", type=["mp4", "mov", "avi"])
+
+            if uploaded_file is not None:
+                st.success("영상이 업로드되었습니다.")
+                st.video(uploaded_file)
+
+                # 분석 버튼
+                if st.button("영상 분석 시작", key="analyze_pushup", type="primary"):
+                    st.session_state.uploaded_video = uploaded_file
+                    st.session_state.selected_exercise = exercise_key
+                    go_to("video_analysis")  # 분석 페이지로 이동
     
-    # 측정 시작 버튼 (크게)
+    # 기존 측정(실시간 카메라) 버튼 유지
     st.markdown("")  # 간격
-    if st.button("측정 시작", key="start_measure", type="primary", use_container_width=True):
+    if st.button("측정 시작", key="start_measure", type="secondary", use_container_width=True):
         st.session_state.selected_exercise = exercise_key
         st.session_state.measure_started = True
         go_to("measure")
@@ -67,4 +82,3 @@ def render(go_to):
 if __name__ == "__main__" or not st.session_state.get('_rendered_by_app', False):
     from utils.page_utils import run_page
     run_page(render)
-
