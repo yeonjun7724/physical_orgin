@@ -45,7 +45,7 @@ def _import_other_pages():
     global video_analysis_pushup
 
     if measure is not None:
-        return  # 이미 import됨
+        return
 
     try:
         # 기본 페이지
@@ -56,7 +56,7 @@ def _import_other_pages():
         import pages_auth.signup as signup_mod
         import pages_auth.login as login_mod
 
-        # ⭐ modules 폴더에서 import (이게 정답)
+        # 튜토리얼 (modules 폴더)
         import pages_tutorial.modules.tutorial_pushup as tutorial_pushup_mod
         import pages_tutorial.modules.tutorial_situp as tutorial_situp_mod
         import pages_tutorial.modules.tutorial_squat as tutorial_squat_mod
@@ -67,7 +67,7 @@ def _import_other_pages():
         # ⭐ 분석 페이지
         import pages_tutorial.modules.video_analysis_pushup as video_analysis_pushup_mod
 
-        # 모듈 주입
+        # 주입
         measure = measure_mod
         result = result_mod
         signup = signup_mod
@@ -84,6 +84,7 @@ def _import_other_pages():
 
     except Exception as e:
         st.warning(f"other_pages import 오류: {str(e)}")
+
 
 # ============================
 # 💡 4) 페이지 이동 기능
@@ -218,4 +219,5 @@ def render_page(page_name: str | None = None):
     else:
         # 2) other_pages / pages_tutorial / analysis
         _render_other_page(target, go_to)
+
 
