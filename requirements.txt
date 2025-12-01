@@ -1,7 +1,8 @@
 streamlit
 opencv-python-headless
-mediapipe
+ultralytics
 numpy
-protobuf==3.20.*
 pillow
 typing-extensions
+openai
+tiktoken
