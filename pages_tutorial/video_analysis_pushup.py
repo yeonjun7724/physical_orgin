@@ -1,76 +1,67 @@
 import streamlit as st
-import base64
-import json
+import tempfile
+from modules.pose_yolo import YoloPoseDetector
+from modules.pushup_analyzer_yolo import PushupAnalyzerYolo
 
 def render(go_to):
-    st.title("📹 푸시업 분석 (브라우저 기반)")
+    st.title("📊 푸시업 분석 (브라우저 기반)")
 
-    video_file = st.file_uploader("분석할 영상을 업로드하세요", type=["mp4", "mov"])
-    if not video_file:
+    uploaded_file = st.file_uploader("업로드할 푸시업 영상을 선택하세요", type=["mp4", "mov", "m4v"])
+
+    if uploaded_file is None:
+        st.info("푸시업 영상을 업로드하면 분석이 시작됩니다.")
         return
 
-    # Base64 변환
-    video_bytes = video_file.read()
-    video_b64 = base64.b64encode(video_bytes).decode()
+    # 사용자 정보
+    user_age = st.session_state.get("user_age", 25)
+    user_gender = st.session_state.get("user_gender", "남")
 
-    st.markdown("### 🔍 브라우저에서 영상 분석 중...")
+    # 브라우저에서 바로 데이터를 읽기 위해 파일로 저장
+    tfile = tempfile.NamedTemporaryFile(delete=False)
+    tfile.write(uploaded_file.read())
+    tfile.flush()
 
-    # f-string 제거 → .format() 사용
-    html_code = """
-    <html>
-    <body>
+    # YOLO pose detector & 분석기
+    detector = YoloPoseDetector()
+    analyzer = PushupAnalyzerYolo()
 
-    <video id="inputVideo" controls style="width:100%;"></video>
+    st.write("⏳ *브라우저에서 영상 분석 중…*")
+    progress = st.empty()
 
-    <script type="module">
-        const videoTag = document.getElementById("inputVideo");
-        videoTag.src = "data:video/mp4;base64,{video_b64}";
+    import cv2
+    cap = cv2.VideoCapture(tfile.name)
 
-        import * as mpPose from "https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.4/pose.js";
-        import * as cam from "https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js";
+    if not cap.isOpened():
+        st.error("⚠ 영상을 열 수 없습니다. 업로드를 다시 시도해주세요.")
+        return
 
-        let pose = new mpPose.Pose({
-            locateFile: (file) => "https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.4/" + file
-        });
+    total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    idx = 0
 
-        pose.setOptions({
-            modelComplexity: 1,
-            smoothLandmarks: true,
-            enableSegmentation: false,
-            minDetectionConfidence: 0.5,
-            minTrackingConfidence: 0.5
-        });
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-        let resultsList = [];
+        idx += 1
+        progress.progress(idx / total)
 
-        pose.onResults((results) => {
-            if (results.poseLandmarks) {
-                resultsList.push(results.poseLandmarks);
-            }
-        });
+        keypoints = detector.detect_keypoints(frame)
+        analyzer.process_frame(keypoints)
 
-        const camera = new cam.Camera(videoTag, {
-            onFrame: async () => {
-                await pose.send({ image: videoTag });
-            }
-        });
+    cap.release()
 
-        camera.start();
+    # 최종 결과
+    count = analyzer.pushup_count
+    quality = analyzer.avg_quality_score()
+    grade = analyzer.calculate_kspo_grade(count, user_age, user_gender)
 
-        videoTag.onended = () => {
-            const msg = JSON.stringify({ landmarks: resultsList });
-            window.parent.postMessage(msg, "*");
-        };
-    </script>
+    st.subheader("📌 분석 결과")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("횟수", f"{count}회")
+    c2.metric("자세 점수", f"{quality}/100")
+    c3.metric("예상 등급", grade)
 
-    </body>
-    </html>
-    """.format(video_b64=video_b64)
-
-    st.components.v1.html(html_code, height=700)
-
-    js_msg = st.experimental_get_query_params().get("js_msg")
-    if js_msg:
-        data = json.loads(js_msg[0])
-        st.write("📌 분석 결과 (keypoints)")
-        st.json(data)
+    st.markdown("---")
+    st.write(f"👤 나이: {user_age}세 / 성별: {user_gender}")
+    st.write("※ 국민체력100 기준을 단순화하여 적용한 참고용 결과입니다.")
