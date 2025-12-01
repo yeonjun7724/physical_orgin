@@ -71,7 +71,7 @@ def render(go_to):
                 if st.button("영상 분석 시작", key="analyze_pushup", type="primary"):
                     st.session_state.uploaded_video = uploaded_file
                     st.session_state.selected_exercise = exercise_key
-                    go_to("video_analysis")  # 분석 페이지로 이동
+                    go_to("video_analysis_pushup")  # 분석 페이지로 이동
     
     # 기존 측정(실시간 카메라) 버튼 유지
     st.markdown("")  # 간격
