@@ -2,6 +2,7 @@ import streamlit as st
 import importlib.util
 import os
 import sys
+import inspect
 
 
 # ============================
@@ -50,11 +51,11 @@ def _import_other_pages():
         import other_pages.measure as measure_mod
         import other_pages.result as result_mod
 
-        # 로그인/회원가입
+        # 인증
         import pages_auth.signup as signup_mod
         import pages_auth.login as login_mod
 
-        # 튜토리얼 페이지 (modules 폴더 NO!)
+        # 튜토리얼 페이지
         import pages_tutorial.tutorial_pushup as tutorial_pushup_mod
         import pages_tutorial.tutorial_situp as tutorial_situp_mod
         import pages_tutorial.tutorial_squat as tutorial_squat_mod
@@ -62,7 +63,7 @@ def _import_other_pages():
         import pages_tutorial.tutorial_knee_lift as tutorial_knee_lift_mod
         import pages_tutorial.tutorial_trunk_flex as tutorial_trunk_flex_mod
 
-        # 영상 분석 페이지
+        # 분석 페이지
         import pages_tutorial.video_analysis_pushup as video_analysis_pushup_mod
 
         # 주입
@@ -124,7 +125,7 @@ def _load_page_module(page_name: str):
         return None
 
     spec = importlib.util.spec_from_file_location(f"pages__{page_name}", file_path)
-    if spec is None or spec.loader is None:
+    if not spec or not spec.loader:
         st.error(f"{page_name} 모듈 로딩 실패")
         return None
 
@@ -140,7 +141,7 @@ def _load_page_module(page_name: str):
 
 
 # ============================
-# 6) render() 호출
+# 6) render() 호출 (중복 호출 방지!)
 # ============================
 
 def _call_render(module, go_to_cb):
@@ -156,16 +157,18 @@ def _call_render(module, go_to_cb):
     st.session_state._rendered_by_app = True
 
     try:
-        render_func(go_to_cb)
-    except TypeError:
-        render_func()
+        sig = inspect.signature(render_func)
+        if len(sig.parameters) == 1:
+            render_func(go_to_cb)  # render(go_to)
+        else:
+            render_func()          # render()
     except Exception as e:
         st.error(f"페이지 렌더링 오류: {str(e)}")
 
 
 
 # ============================
-# 7) other_pages/tutorial_pages 렌더링
+# 7) other_pages / tutorial_pages 렌더링
 # ============================
 
 def _render_other_page(page_name: str, go_to_cb):
@@ -177,7 +180,6 @@ def _render_other_page(page_name: str, go_to_cb):
         "signup": signup,
         "login": login,
 
-        # 튜토리얼 페이지
         "tutorial_pushup": tutorial_pushup,
         "tutorial_situp": tutorial_situp,
         "tutorial_squat": tutorial_squat,
@@ -185,7 +187,6 @@ def _render_other_page(page_name: str, go_to_cb):
         "tutorial_knee_lift": tutorial_knee_lift,
         "tutorial_trunk_flex": tutorial_trunk_flex,
 
-        # 분석 페이지
         "video_analysis_pushup": video_analysis_pushup,
     }
 
