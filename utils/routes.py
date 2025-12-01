@@ -56,16 +56,16 @@ def _import_other_pages():
         import pages_auth.signup as signup_mod
         import pages_auth.login as login_mod
 
-        # 튜토리얼 페이지
-        import pages_tutorial.tutorial_pushup as tutorial_pushup_mod
-        import pages_tutorial.tutorial_situp as tutorial_situp_mod
-        import pages_tutorial.tutorial_squat as tutorial_squat_mod
-        import pages_tutorial.tutorial_balance as tutorial_balance_mod
-        import pages_tutorial.tutorial_knee_lift as tutorial_knee_lift_mod
-        import pages_tutorial.tutorial_trunk_flex as tutorial_trunk_flex_mod
+        # ⭐ modules 폴더에서 import (이게 정답)
+        import pages_tutorial.modules.tutorial_pushup as tutorial_pushup_mod
+        import pages_tutorial.modules.tutorial_situp as tutorial_situp_mod
+        import pages_tutorial.modules.tutorial_squat as tutorial_squat_mod
+        import pages_tutorial.modules.tutorial_balance as tutorial_balance_mod
+        import pages_tutorial.modules.tutorial_knee_lift as tutorial_knee_lift_mod
+        import pages_tutorial.modules.tutorial_trunk_flex as tutorial_trunk_flex_mod
 
         # ⭐ 분석 페이지
-        import pages_tutorial.video_analysis_pushup as video_analysis_pushup_mod
+        import pages_tutorial.modules.video_analysis_pushup as video_analysis_pushup_mod
 
         # 모듈 주입
         measure = measure_mod
@@ -84,9 +84,6 @@ def _import_other_pages():
 
     except Exception as e:
         st.warning(f"other_pages import 오류: {str(e)}")
-
-
-
 
 # ============================
 # 💡 4) 페이지 이동 기능
@@ -221,3 +218,4 @@ def render_page(page_name: str | None = None):
     else:
         # 2) other_pages / pages_tutorial / analysis
         _render_other_page(target, go_to)
+
