@@ -18,7 +18,10 @@ def render(go_to):
     current_index = exercise_order.index(exercise_key)
     prev_key = exercise_order[(current_index - 1) % len(exercise_order)]
     next_key = exercise_order[(current_index + 1) % len(exercise_order)]
-        
+
+    st.session_state.user_age = st.number_input("나이", 10, 80, 25)
+    st.session_state.user_gender = st.selectbox("성별", ["남", "여"])    
+    
     st.markdown("---")
     # 헤더 (이전 버튼 + 제목 + 다음 버튼)
     col1, col2, col3 = st.columns([1, 8, 1])
