@@ -20,3 +20,17 @@ render_header()
 
 # 페이지 렌더링
 render_page()
+
+st_js = """
+<script>
+window.addEventListener("message", (event) => {
+  if (event.data) {
+    // event.data를 쿼리파라미터로 넣어서 Python과 통신
+    const query = new URLSearchParams(window.location.search);
+    query.set("js_msg", event.data);
+    window.location.search = query.toString();
+  }
+});
+</script>
+"""
+st.markdown(st_js, unsafe_allow_html=True)
