@@ -10,7 +10,8 @@ def render(go_to=None, **kwargs):
 
     uploaded_file = st.file_uploader(
         "업로드할 푸시업 영상을 선택하세요",
-        type=["mp4", "mov", "m4v"]
+        type=["mp4", "mov", "m4v"],
+        key="pushup_video_uploader"
     )
 
     if uploaded_file is None:
