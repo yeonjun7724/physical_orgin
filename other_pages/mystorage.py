@@ -1,11 +1,7 @@
 """내 보관함 페이지"""
 import streamlit as st
-from utils.app_common import setup_common
 from components.common.section_card import SectionCard, CloseSectionCard
 from service import InventoryService
-
-# 공통 설정 적용
-setup_common()
 
 
 def render(go_to):

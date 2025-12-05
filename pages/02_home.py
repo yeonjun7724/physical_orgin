@@ -1,6 +1,5 @@
 """홈 페이지"""
 import streamlit as st
-from utils.app_common import setup_common
 from components.common import ProgressBar
 from components.common.section_card import SectionCard, CloseSectionCard
 from components.cards.home_card import (
@@ -10,13 +9,10 @@ from components.cards.exercise_card import ExerciseItemCard
 # 서비스는 필요할 때 service_cache에서 가져옴
 from data.constants_exercise import COLORS, EXERCISES
 
-# 공통 설정 적용
-setup_common()
-
 
 def _greeting_block():
    """인사말 블록"""
-   user_name = st.session_state.get("user_name", "체력왕")
+   user_name = st.session_state.get("user_name", "체력")
    GreetingCard(user_name, scroll_target_id="exercise-selection")
 
 
@@ -149,9 +145,7 @@ def _recent_result_section():
          with col1:
             exercise_key, exercise_name = exercises_list[i]
             st.markdown(
-               f"""
-               <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; 
-                           border-left: 4px solid #ddd;">
+               f"""<div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; border-left: 4px solid #ddd;">
                   <div style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">{exercise_name}</div>
                   <div style="font-size: 0.9rem; color: #999;">측정 기록 없음</div>
                   <div style="font-size: 0.9rem; color: #999;">-</div>
@@ -164,9 +158,7 @@ def _recent_result_section():
             if i + 1 < len(exercises_list):
                exercise_key, exercise_name = exercises_list[i + 1]
                st.markdown(
-                  f"""
-                  <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; 
-                              border-left: 4px solid #ddd;">
+                  f"""<div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; border-left: 4px solid #ddd;">
                      <div style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">{exercise_name}</div>
                      <div style="font-size: 0.9rem; color: #999;">측정 기록 없음</div>
                      <div style="font-size: 0.9rem; color: #999;">-</div>
@@ -211,9 +203,7 @@ def _recent_result_section():
                time_ago = _format_time_ago(created_at)
                
                st.markdown(
-                  f"""
-                  <div style="background: #f0f7ff; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; 
-                              border-left: 4px solid #4c84af;">
+                  f"""<div style="background: #f0f7ff; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; border-left: 4px solid #4c84af;">
                      <div style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">{exercise_name}</div>
                      <div style="font-size: 0.95rem; color: #666; margin-bottom: 0.25rem;">{time_ago}</div>
                      <div style="font-size: 0.95rem; color: #4c84af; font-weight: 600;">상위 {percentile}%</div>
@@ -224,9 +214,7 @@ def _recent_result_section():
             else:
                # 측정 기록이 없는 종목
                st.markdown(
-                  f"""
-                  <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; 
-                              border-left: 4px solid #ddd;">
+                  f"""<div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; border-left: 4px solid #ddd;">
                      <div style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">{exercise_name}</div>
                      <div style="font-size: 0.9rem; color: #999;">측정 기록 없음</div>
                      <div style="font-size: 0.9rem; color: #999;">-</div>
@@ -245,9 +233,7 @@ def _recent_result_section():
                   time_ago = _format_time_ago(created_at)
                   
                   st.markdown(
-                     f"""
-                     <div style="background: #f0f7ff; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; 
-                                 border-left: 4px solid #4c84af;">
+                     f"""<div style="background: #f0f7ff; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; border-left: 4px solid #4c84af;">
                         <div style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">{exercise_name}</div>
                         <div style="font-size: 0.95rem; color: #666; margin-bottom: 0.25rem;">{time_ago}</div>
                         <div style="font-size: 0.95rem; color: #4c84af; font-weight: 600;">상위 {percentile}%</div>
@@ -258,9 +244,7 @@ def _recent_result_section():
                else:
                   # 측정 기록이 없는 종목
                   st.markdown(
-                     f"""
-                     <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; 
-                                 border-left: 4px solid #ddd;">
+                     f"""<div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; border-left: 4px solid #ddd;">
                         <div style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">{exercise_name}</div>
                         <div style="font-size: 0.9rem; color: #999;">측정 기록 없음</div>
                         <div style="font-size: 0.9rem; color: #999;">-</div>
@@ -336,9 +320,3 @@ def render(go_to):
       _recent_result_section()
    
    _exercise_selection_section(go_to)
-
-
-# 페이지가 직접 실행될 때 렌더링
-if __name__ == "__main__" or not st.session_state.get('_rendered_by_app', False):
-   from utils.page_utils import run_page
-   run_page(render)

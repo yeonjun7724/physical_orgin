@@ -37,7 +37,7 @@ def render_signup_page():
     
     with col2:
         # 제목
-        st.markdown("# 💪 체력왕 FIT")
+        st.markdown("# 💪 체력 FIT")
         st.markdown("#### 회원가입")
         st.markdown("---")
         
@@ -209,9 +209,11 @@ def render_signup_page():
                             # 포인트 데이터 초기화
                             points_service.initialize_user_points(user_id)
                             
-                            st.success("회원가입이 완료되었습니다! 로그인 중...")
-                            # 자동 로그인
-                            login_user(email, password)
+                            # 토스트 알림 표시 (3초 후 자동 사라짐)
+                            st.toast("✅ 회원가입이 완료되었습니다!", icon="🎉")
+                            
+                            # 로그인 페이지로 이동
+                            st.session_state.page = "login"
                             st.rerun()
                         else:
                             st.error("회원가입 중 오류가 발생했습니다.")

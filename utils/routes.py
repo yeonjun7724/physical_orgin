@@ -25,6 +25,7 @@ for path in [BASE_DIR, PAGES_TUTORIAL_DIR, OTHER_PAGES_DIR, PAGES_AUTH_DIR]:
 # ============================
 
 measure = result = signup = login = None
+info_update = confirm_to_info_update = None
 
 tutorial_pushup = tutorial_situp = tutorial_squat = None
 tutorial_balance = tutorial_knee_lift = tutorial_trunk_flex = None
@@ -38,7 +39,7 @@ video_analysis_pushup = None
 # ============================
 
 def _import_other_pages():
-    global measure, result, signup, login
+    global measure, result, signup, login, info_update, confirm_to_info_update
     global tutorial_pushup, tutorial_situp, tutorial_squat
     global tutorial_balance, tutorial_knee_lift, tutorial_trunk_flex
     global video_analysis_pushup
@@ -50,6 +51,8 @@ def _import_other_pages():
         # 기본 페이지
         import other_pages.measure as measure_mod
         import other_pages.result as result_mod
+        import other_pages.info_update as info_update_mod
+        import other_pages.confirm_to_info_update as confirm_to_info_update_mod
 
         # 인증
         import pages_auth.signup as signup_mod
@@ -71,6 +74,8 @@ def _import_other_pages():
         result = result_mod
         signup = signup_mod
         login = login_mod
+        info_update = info_update_mod
+        confirm_to_info_update = confirm_to_info_update_mod
 
         tutorial_pushup = tutorial_pushup_mod
         tutorial_situp = tutorial_situp_mod
@@ -179,6 +184,8 @@ def _render_other_page(page_name: str, go_to_cb):
         "result": result,
         "signup": signup,
         "login": login,
+        "info_update": info_update,
+        "confirm_to_info_update": confirm_to_info_update,
 
         "tutorial_pushup": tutorial_pushup,
         "tutorial_situp": tutorial_situp,
@@ -208,6 +215,9 @@ def render_page(page_name: str | None = None):
 
     if target in PAGE_FILE_MAP:
         module = _load_page_module(target)
+        if module is None:
+            st.error(f"페이지 모듈을 로드할 수 없습니다: {target}")
+            return
         _call_render(module, go_to)
     else:
         _render_other_page(target, go_to)

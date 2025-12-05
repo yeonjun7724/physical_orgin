@@ -1,10 +1,5 @@
 """결과 페이지"""
 import streamlit as st
-from utils.app_common import setup_common
-
-# 공통 설정 적용
-setup_common()
-
 
 def render(go_to):
     """결과 페이지 렌더링"""

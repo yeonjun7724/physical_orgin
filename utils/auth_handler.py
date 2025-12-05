@@ -13,26 +13,19 @@ def check_auth_and_show_login():
     # signup과 login 페이지는 인증 없이 접근 가능
     current_page = st.session_state.get("page", "home")
     if current_page == "signup":
-        # signup 페이지는 별도 처리
-        st.set_page_config(
-            page_title="체력왕 FIT - 회원가입",
-            page_icon="💪",
-            layout="centered",
-            initial_sidebar_state="collapsed"
-        )
+
         style.apply_global_css()
         render_signup_page()
         st.stop()
         return
     
     if current_page == "login":
-        # login 페이지는 별도 처리
-        st.set_page_config(
-            page_title="체력왕 FIT - 로그인",
-            page_icon="💪",
-            layout="centered",
-            initial_sidebar_state="collapsed"
-        )
+        # 로그인된 사용자가 login 페이지에 접근하면 홈으로 리다이렉트
+        if is_authenticated():
+            st.session_state.page = "home"
+            st.rerun()
+            return
+        
         style.apply_global_css()
         
         # 사이드바 완전히 숨기기
@@ -63,14 +56,6 @@ def check_auth_and_show_login():
         return
     
     if not is_authenticated():
-        # 페이지 설정
-        st.set_page_config(
-            page_title="체력왕 FIT - 로그인",
-            page_icon="💪",
-            layout="centered",
-            initial_sidebar_state="collapsed"
-        )
-        
         # 전역 스타일 적용
         style.apply_global_css()
         

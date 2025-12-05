@@ -1,7 +1,6 @@
 """프로필 페이지"""
 import streamlit as st
 import pandas as pd
-from utils.app_common import setup_common
 from components.common import ProfileAvatar
 from components.common.section_card import SectionCard, CloseSectionCard
 from components.cards.profile_card import (
@@ -13,8 +12,6 @@ from service import (
 )
 from data.constants import COLORS
 from data.constants_exercise import GRADE_INFO
-# 공통 설정 적용
-setup_common()
 
 
 def render(go_to):
@@ -70,19 +67,40 @@ def render(go_to):
 
    with col2:
       if st.button("내정보 수정", use_container_width=True, type="primary"):
-         st.switch_page("other_pages/confirm_to_info_update.py")
+         go_to("info_update")
    
    with col3:
       # 키, 몸무게, 나이, 성별, 레벨 정보
-      user_age = profile.get("age_group", "20대")
+      # 나이 그룹을 표시 형식으로 변환 (20-24 -> 20대)
+      age_group_map = {
+         "10-19": "10대",
+         "20-24": "20대",
+         "25-29": "30대",
+         "30-34": "30대",
+         "35-39": "40대",
+         "40-44": "40대",
+         "45-49": "50대",
+         "50-54": "50대",
+         "55-59": "60대 이상",
+         "60+": "60대 이상"
+      }
+      age_group_raw = profile.get("age_group", "20-24")
+      user_age = age_group_map.get(age_group_raw, "20대")
       user_gender = "남성" if profile.get("gender") == "M" else "여성"
-      user_height = st.session_state.get("user_height", 175)
-      user_weight = st.session_state.get("user_weight", 70)
+      
+      # profile_data.json에서 키, 몸무게 가져오기
+      user_height = profile.get("height")
+      user_weight = profile.get("weight")
+      
+      # 키, 몸무게가 없으면 '등록해주세요'로 표시
+      height_display = f"{user_height} cm" if user_height is not None else "등록해주세요"
+      weight_display = f"{user_weight} kg" if user_weight is not None else "등록해주세요"
+      
       user_level = 100
       
       st.info(
-         f"**키:** {user_height} cm  \n"
-         f"**몸무게:** {user_weight} kg  \n"
+         f"**키:** {height_display}  \n"
+         f"**몸무게:** {weight_display}  \n"
          f"**나이:** {user_age}  \n"
          f"**성별:** {user_gender}  \n"
          f"**레벨:** Lv. {user_level}"
@@ -196,27 +214,4 @@ def render(go_to):
    else:
       st.info("측정 히스토리가 없습니다.")
    
-   if st.button("더 보기", key="view_more_history", use_container_width=True):
-      st.info("더 많은 히스토리를 보려면 스크롤하세요.")
-   
    CloseSectionCard()
-   
-   # 설정 버튼
-   ActionButtonsRow([
-      {
-         "label": "⚙️ 설정",
-         "key": "settings",
-         "on_click": lambda: st.info("설정 페이지로 이동합니다. (권한/프라이버시/데이터 내보내기)")
-      },
-      {
-         "label": "📤 결과 공유",
-         "key": "share_result",
-         "on_click": lambda: st.success("스크린샷이 생성되었습니다! 결과를 공유하세요.")
-      }
-   ])
-
-
-# 페이지가 직접 실행될 때 렌더링
-if __name__ == "__main__" or not st.session_state.get('_rendered_by_app', False):
-   from utils.page_utils import run_page
-   run_page(render)

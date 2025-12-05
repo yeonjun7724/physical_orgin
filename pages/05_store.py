@@ -1,12 +1,8 @@
 """상점 페이지"""
 import streamlit as st
-from utils.app_common import setup_common
 from components.common.section_card import SectionCard, CloseSectionCard
 from components.cards.store_card import StoreItemGrid
 from service import PointsService
-
-# 공통 설정 적용
-setup_common()
 
 
 def render(go_to):
@@ -91,9 +87,3 @@ def render(go_to):
    
    # 구매 안내
    st.info("💡 **팁**: FIT 포인트는 측정 완료, 챌린지 달성, 랭킹 보상으로 획득할 수 있습니다!")
-
-
-# 페이지가 직접 실행될 때 렌더링
-if __name__ == "__main__" or not st.session_state.get('_rendered_by_app', False):
-   from utils.page_utils import run_page
-   run_page(render)

@@ -1,6 +1,5 @@
 """공통 설정 및 유틸리티"""
 import streamlit as st
-from utils.auth_handler import check_auth_and_show_login
 from service import (
    InventoryService, PointsService, ProfileService, 
    StreakService, NotificationService
@@ -10,11 +9,27 @@ import utils.style as style
 
 def setup_common():
    """공통 설정 적용 (모든 페이지에서 사용)"""
+   st.markdown("""
+   <style>
+
+   /* 스트림릿이 자동으로 삽입하는 페이지 최상단 공백 제거 */
+   section.main > div:nth-child(1) {
+      padding-top: 0 !important;
+      margin-top: 0 !important;
+   }
+
+   /* stVerticalBlock 자체를 숨김 */
+   div[data-testid="stVerticalBlock"] {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+   }
+
+   </style>
+   """, unsafe_allow_html=True)
+
+
    # 헤더 렌더링 플래그 리셋 (매 실행마다)
    st.session_state._header_rendered_this_run = False
-   
-   # 인증 체크 및 로그인 페이지 표시
-   check_auth_and_show_login()
    
    # user_id 확인
    user_id = st.session_state.get("user_id")
@@ -81,16 +96,6 @@ def setup_common():
       notification_service.initialize_settings(user_id)
    
    # 페이지 설정 - 사이드바 활성화
-   # 중복 호출 방지
-   if not st.session_state.get('_page_config_set', False):
-      st.set_page_config(
-         page_title="체력왕 FIT",
-         page_icon="💪",
-         layout="wide",
-         initial_sidebar_state="expanded"
-      )
-      st.session_state._page_config_set = True
-   
    # 전역 스타일 적용
    style.apply_global_css()
    

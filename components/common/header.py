@@ -28,7 +28,7 @@ def render_header():
     # --------------------------
     # 로고 행 (맨 위)
     # --------------------------
-    st.markdown('<div class="app-header-box"><div class="app-logo">💪 체력왕 FIT</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="app-header-box"><div class="app-logo">💪 체력 FIT</div></div>', unsafe_allow_html=True)
 
     # --------------------------
     # 네비 버튼 + 사용자 + 로그아웃 한 줄(Row)

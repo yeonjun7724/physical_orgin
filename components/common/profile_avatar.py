@@ -16,9 +16,9 @@ def ProfileAvatar(name: str, age: str, gender: str, icon: str = "👤", level: i
     - other_pages/info_update.py: 내정보 수정 페이지
     
     사용 예시:
-        ProfileAvatar("체력왕김민수", "20대", "남성", image_path="assets/image/character.png")
-        ProfileAvatar("체력왕김민수", "20대", "남성", "👤", 100)  # 이모지 사용
-        ProfileAvatar("체력왕김민수", "20대", "남성", show_info=False)  # 사진만 표시
+        ProfileAvatar("체력김민수", "20대", "남성", image_path="assets/image/character.png")
+        ProfileAvatar("체력김민수", "20대", "남성", "👤", 100)  # 이모지 사용
+        ProfileAvatar("체력김민수", "20대", "남성", show_info=False)  # 사진만 표시
     """
     # 이미지 경로가 없으면 기본값 사용
     if image_path is None:

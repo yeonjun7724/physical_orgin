@@ -41,6 +41,21 @@ def StoreItemCard(name: str, price: int, icon: str, description: str,
     current_points = points_service.get_total_points(user_id)
     can_afford = points_service.can_afford(user_id, price)
     
+    # 버튼 텍스트 및 비활성화 상태 결정
+    if is_equipped:
+        button_text = "착용 중"
+        button_disabled = True
+        show_price = False
+    elif is_in_storage:
+        button_text = "보유 중"
+        button_disabled = True
+        show_price = False
+    else:
+        button_text = "구매"
+        # 포인트가 부족하면 버튼 비활성화
+        button_disabled = not can_afford
+        show_price = True
+    
     # 카드 컨테이너
     with st.container():
         # 아이콘과 제목
@@ -49,74 +64,58 @@ def StoreItemCard(name: str, price: int, icon: str, description: str,
             st.markdown(f"## {icon}")
         with col_info:
             st.markdown(f"### {name}")
-            st.caption(description)
-        
-        # 버튼 텍스트 및 비활성화 상태 결정
-        if is_equipped:
-            button_text = "착용 중"
-            button_disabled = True
-            show_price = False
-        elif is_in_storage:
-            button_text = "보유 중"
-            button_disabled = True
-            show_price = False
-        else:
-            button_text = "구매"
-            # 포인트가 부족하면 버튼 비활성화
-            button_disabled = not can_afford
-            show_price = True
-        
-        # 가격과 버튼을 같은 row에 배치
-        if show_price:
-            col_button, col_price = st.columns([2, 1])
-            with col_button:
-                button_key = f"buy_{category}_{name}_{item_index}"
-                button_clicked = st.button(button_text, key=button_key, use_container_width=True, disabled=button_disabled)
+            
+            # description과 price를 같은 row에 배치
+            col_desc, col_price = st.columns([2, 1])
+            with col_desc:
+                st.caption(description)
             with col_price:
-                st.markdown(
-                    f"""
-                    <div style="font-size: 1.3rem; font-weight: 700; color: #4c84af; 
-                                display: flex; align-items: center; height: 100%;">
-                        {price} FIT
-                    </div>
-                    """,
-                    unsafe_allow_html=True
+                if show_price:
+                    st.markdown(
+                        f"""
+                        <div style="font-size: 1.3rem; font-weight: 700; color: #4c84af; 
+                                    display: flex; align-items: center; height: 100%;">
+                            {price} FIT
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+    
+    # 버튼은 컨테이너 밖에서 전체 너비로 배치
+    button_key = f"buy_{category}_{name}_{item_index}"
+    button_clicked = st.button(button_text, key=button_key, use_container_width=True, disabled=button_disabled)
+    
+    # 구매 버튼 클릭 처리
+    if button_clicked:
+        if not is_in_storage:
+            # 포인트 확인
+            if points_service.can_afford(user_id, price):
+                # 구매 처리
+                purchase_id = purchase_service.create_purchase(
+                    user_id, name, category, icon, price, "FIT"
                 )
-        else:
-            button_key = f"buy_{category}_{name}_{item_index}"
-            button_clicked = st.button(button_text, key=button_key, use_container_width=True, disabled=button_disabled)
-        
-        # 구매 버튼 클릭 처리
-        if button_clicked:
-            if not is_in_storage:
-                # 포인트 확인
-                if points_service.can_afford(user_id, price):
-                    # 구매 처리
-                    purchase_id = purchase_service.create_purchase(
-                        user_id, name, category, icon, price, "FIT"
+                
+                if purchase_id:
+                    # 인벤토리에 추가
+                    inventory_service.add_item(
+                        user_id, name, category, icon, description, price, "purchase"
                     )
                     
-                    if purchase_id:
-                        # 인벤토리에 추가
-                        inventory_service.add_item(
-                            user_id, name, category, icon, description, price, "purchase"
-                        )
-                        
-                        # 포인트 차감
-                        points_service.spend_points(
-                            user_id, price, "purchase", f"{name} 구매"
-                        )
-                        
-                        # session_state 업데이트
-                        st.session_state.user_points = points_service.get_total_points(user_id)
-                        
-                        st.success(f"{name}을(를) {price} FIT로 구매했습니다! 보관함에서 확인하세요.")
-                        st.rerun()
-                    else:
-                        st.error("구매 처리 중 오류가 발생했습니다.")
+                    # 포인트 차감
+                    points_service.spend_points(
+                        user_id, price, "purchase", f"{name} 구매"
+                    )
+                    
+                    # session_state 업데이트
+                    st.session_state.user_points = points_service.get_total_points(user_id)
+                    
+                    st.success(f"{name}을(를) {price} FIT로 구매했습니다! 보관함에서 확인하세요.")
+                    st.rerun()
                 else:
-                    current_points = points_service.get_total_points(user_id)
-                    st.error(f"포인트가 부족합니다. (보유: {current_points} FIT, 필요: {price} FIT)")
+                    st.error("구매 처리 중 오류가 발생했습니다.")
+            else:
+                current_points = points_service.get_total_points(user_id)
+                st.error(f"포인트가 부족합니다. (보유: {current_points} FIT, 필요: {price} FIT)")
         
         st.markdown("---")
 

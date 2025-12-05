@@ -22,7 +22,7 @@ def render_login_page():
     
     with col2:
         # 제목
-        st.markdown("# 💪 체력왕 FIT")
+        st.markdown("# 💪 체력 FIT")
         st.markdown("#### 로그인하여 서비스를 이용하세요")
         st.markdown("---")
         

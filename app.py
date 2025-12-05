@@ -1,10 +1,18 @@
 import streamlit as st
+from utils.auth_handler import check_auth_and_show_login
 from utils.app_common import setup_common
 from utils.routes import render_page
 from components.common.header import render_header
 
-st.set_page_config(page_title="체력왕 FIT", layout="wide")
+# 설정은 앱 시작 시 1회만
+st.set_page_config(
+    page_title="체력 FIT",
+    page_icon="💪",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
+# 사이드바 숨기기 (로그인 후 메인 페이지에서)
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {display: none !important;}
@@ -13,24 +21,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# 💥 인증 먼저 검사 (로그인 또는 회원가입 페이지 렌더 후 stop)
+check_auth_and_show_login()
+
+# 로그인 성공한 경우에만 공통 세팅 적용
 setup_common()
 
-# 상단 헤더 렌더링
 render_header()
-
-# 페이지 렌더링
 render_page()
-
-st_js = """
-<script>
-window.addEventListener("message", (event) => {
-  if (event.data) {
-    // event.data를 쿼리파라미터로 넣어서 Python과 통신
-    const query = new URLSearchParams(window.location.search);
-    query.set("js_msg", event.data);
-    window.location.search = query.toString();
-  }
-});
-</script>
-"""
-st.markdown(st_js, unsafe_allow_html=True)

@@ -1,15 +1,11 @@
 """랭킹 페이지"""
 import streamlit as st
 import pandas as pd
-from utils.app_common import setup_common
 from components.common.section_card import SectionCard, CloseSectionCard
 from components.cards.rank_card import MyRankCard, RankCard
 # 서비스는 필요할 때 service_cache에서 가져옴
 from data.constants_exercise import EXERCISES
 from data.constants import COLORS
-
-# 공통 설정 적용
-setup_common()
 
 
 def _generate_mock_leaderboard(event: str, period: str, limit: int) -> list:
@@ -17,7 +13,7 @@ def _generate_mock_leaderboard(event: str, period: str, limit: int) -> list:
    import random
    
    mock_names = [
-      "체력왕김철수", "운동마스터", "피트니스킹", "헬스장주인", "근육맨",
+      "체력김철수", "운동마스터", "피트니스킹", "헬스장주인", "근육맨",
       "스포츠스타", "운동러버", "피트니스퀸", "헬스여왕", "체력부자",
       "운동고수", "피트니스프로", "헬스마니아", "체력천재", "운동신",
       "피트니스신", "헬스고수", "체력달인", "운동왕", "피트니스킹"
@@ -367,10 +363,3 @@ def render(go_to):
       )
    
    CloseSectionCard()
-   
-
-
-# 페이지가 직접 실행될 때 렌더링
-if __name__ == "__main__" or not st.session_state.get('_rendered_by_app', False):
-   from utils.page_utils import run_page
-   run_page(render)

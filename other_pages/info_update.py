@@ -1,21 +1,58 @@
 """내정보 수정 페이지"""
 import streamlit as st
-from utils.app_common import setup_common
 from components.common import ProfileAvatar
 from components.common.section_card import SectionCard, CloseSectionCard
-
-# 공통 설정 적용
-setup_common()
-
-# 비밀번호 검증 확인
-if not st.session_state.get("info_update_verified", False):
-  st.switch_page("other_pages/confirm_to_info_update.py")
-
+from service import ProfileService
+from utils.page_utils import get_user_id
 
 def render(go_to):
   """내정보 수정 페이지 렌더링"""
-  # 로그인한 username 가져오기
-  current_username = st.session_state.get("user_name", "체력왕")
+  # 비밀번호 검증 확인 (페이지 내부에서 처리)
+  if not st.session_state.get("info_update_verified", False):
+    st.warning("비밀번호 확인이 필요합니다.")
+    if st.button("확인하러 가기", use_container_width=True):
+      go_to("confirm_to_info_update")
+    return
+  
+  user_id = get_user_id()
+  if not user_id:
+    st.warning("로그인이 필요합니다.")
+    return
+  
+  # ProfileService를 사용하여 프로필 정보 가져오기
+  profile_service = ProfileService()
+  profile = profile_service.get_profile_by_user_id(user_id)
+  
+  if not profile:
+    st.warning("프로필 정보가 없습니다.")
+    return
+  
+  # 프로필에서 초기값 가져오기
+  current_username = profile.get("nickname", st.session_state.get("user_name", "체력"))
+  current_age_group = profile.get("age_group", "20-24")
+  current_gender = profile.get("gender", "M")
+  current_height = profile.get("height")
+  current_weight = profile.get("weight")
+  
+  # 나이 그룹을 표시 형식으로 변환 (20-24 -> 20대)
+  age_group_display_map = {
+    "10-19": "10대",
+    "20-24": "20대",
+    "25-29": "30대",
+    "30-34": "30대",
+    "35-39": "40대",
+    "40-44": "40대",
+    "45-49": "50대",
+    "50-54": "50대",
+    "55-59": "60대 이상",
+    "60+": "60대 이상"
+  }
+  
+  # 나이 그룹 표시 형식으로 변환
+  age_group_display = age_group_display_map.get(current_age_group, "20대")
+  
+  # 성별 표시 형식으로 변환
+  gender_display = "남성" if current_gender == "M" else "여성"
   
   # 프로필 설정
   SectionCard("👤 프로필 정보 수정")
@@ -25,8 +62,8 @@ def render(go_to):
   with col1:
     ProfileAvatar(
       current_username,
-      st.session_state.get("user_age", "20대"),
-      st.session_state.get("user_gender", "남성"),
+      age_group_display,
+      gender_display,
       level=100
     )
     if st.button("프로필 사진 변경", use_container_width=True):
@@ -35,7 +72,7 @@ def render(go_to):
   with col2:
     st.markdown("### 기본 정보")
     
-    # 로그인한 username을 기본값으로 사용
+    # 닉네임 입력
     user_name = st.text_input(
         "닉네임",
         value=current_username,
@@ -45,19 +82,23 @@ def render(go_to):
     
     col_age, col_gender = st.columns(2)
     with col_age:
+        age_group_options = ["10대", "20대", "30대", "40대", "50대", "60대 이상"]
+        age_group_index = age_group_options.index(age_group_display) if age_group_display in age_group_options else 1
         age_group = st.selectbox(
           "연령대",
-          ["10대", "20대", "30대", "40대", "50대", "60대 이상"],
-          index=["10대", "20대", "30대", "40대", "50대", "60대 이상"].index(st.session_state.get("user_age", "20대")) if st.session_state.get("user_age", "20대") in ["10대", "20대", "30대", "40대", "50대", "60대 이상"] else 1,
+          age_group_options,
+          index=age_group_index,
           key="info_update_age_group",
           help="연령대별 통계에 사용됩니다"
         )
     
     with col_gender:
+        gender_options = ["남성", "여성", "기타"]
+        gender_index = gender_options.index(gender_display) if gender_display in gender_options else 0
         gender = st.selectbox(
           "성별",
-          ["남성", "여성", "기타"],
-          index=["남성", "여성", "기타"].index(st.session_state.get("user_gender", "남성")) if st.session_state.get("user_gender", "남성") in ["남성", "여성", "기타"] else 0,
+          gender_options,
+          index=gender_index,
           key="info_update_gender",
           help="성별별 통계에 사용됩니다"
         )
@@ -66,7 +107,7 @@ def render(go_to):
         "키 (cm)",
         min_value=100,
         max_value=250,
-        value=st.session_state.get("user_height", 175),
+        value=current_height if current_height is not None else 175,
         key="info_update_height",
         help="체력 측정 결과 계산에 사용됩니다"
     )
@@ -75,19 +116,48 @@ def render(go_to):
         "몸무게 (kg)",
         min_value=30,
         max_value=200,
-        value=st.session_state.get("user_weight", 70),
+        value=current_weight if current_weight is not None else 70,
         key="info_update_weight",
         help="체력 측정 결과 계산에 사용됩니다"
     )
     
     if st.button("프로필 저장", type="primary", use_container_width=True):
-        st.session_state.user_name = user_name
-        st.session_state.user_age = age_group
-        st.session_state.user_gender = gender
-        st.session_state.user_height = height
-        st.session_state.user_weight = weight
-        st.success("프로필이 저장되었습니다!")
-        st.rerun()
+        # 나이 그룹을 저장 형식으로 변환 (20대 -> 20-24)
+        age_group_map = {
+            "10대": "10-19",
+            "20대": "20-24",
+            "30대": "30-34",
+            "40대": "40-44",
+            "50대": "50-54",
+            "60대 이상": "60+"
+        }
+        age_group_save = age_group_map.get(age_group, "20-24")
+        
+        # 성별을 저장 형식으로 변환
+        gender_save = "M" if gender == "남성" else ("F" if gender == "여성" else "M")
+        
+        # ProfileService를 사용하여 profile_data.json에 저장
+        updates = {
+            "nickname": user_name,
+            "age_group": age_group_save,
+            "gender": gender_save,
+            "height": height,
+            "weight": weight
+        }
+        
+        success = profile_service.update_profile(user_id, updates)
+        
+        if success:
+            # session_state도 업데이트 (호환성을 위해)
+            st.session_state.user_name = user_name
+            st.session_state.user_age = age_group
+            st.session_state.user_gender = gender
+            st.session_state.user_height = height
+            st.session_state.user_weight = weight
+            st.success("프로필이 저장되었습니다!")
+            st.rerun()
+        else:
+            st.error("프로필 저장 중 오류가 발생했습니다.")
   
   CloseSectionCard()
   
@@ -107,7 +177,12 @@ def render(go_to):
   with col1:
     if st.button("← 설정으로 돌아가기", use_container_width=True):
         st.session_state.info_update_verified = False  # 검증 상태 초기화
-        st.switch_page("pages/06_setting.py")
+        # 모달이 열려있으면 모달 닫기
+        if st.session_state.get("info_update_modal_open", False):
+            st.session_state["info_update_modal_open"] = False
+            st.rerun()
+        else:
+            go_to("setting")
 
 
 # 페이지가 직접 실행될 때 렌더링

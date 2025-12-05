@@ -1,11 +1,7 @@
 """제자리 무릎들기 튜토리얼 페이지"""
 import streamlit as st
-from utils.app_common import setup_common
 from components.common.section_card import section_card
 from data.constants_exercise import EXERCISES
-
-# 공통 설정 적용
-setup_common()
 
 def render(go_to):
     """제자리 무릎들기 튜토리얼 페이지 렌더링"""
@@ -53,8 +49,17 @@ def render(go_to):
         # 카메라 설정 섹션
         with section_card("카메라 설정", icon="📷", variant="default"):
             # 카메라 미리보기 영역
-            st.info("올바른 자세는 아래 영상을 참고하세요")
-            
+            st.text("올바른 자세는 아래 영상을 참고하세요")
+            youtube_url = "https://www.youtube.com/embed/SLIaql7h6RQ"
+            st.markdown(f"""
+                <iframe width="100%" height="350"
+                src="{youtube_url}"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+                </iframe>
+            """, unsafe_allow_html=True)
+
 
     
     # 측정 시작 버튼 (크게)
@@ -66,7 +71,7 @@ def render(go_to):
 
 
 # 페이지가 직접 실행될 때 렌더링
-if __name__ == "__main__" or not st.session_state.get('_rendered_by_app', False):
+if __name__ == "__main__":
     from utils.page_utils import run_page
     run_page(render)
 

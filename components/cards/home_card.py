@@ -10,7 +10,7 @@ def GreetingCard(user_name: str, scroll_target_id: str = None):
     - pages/02_home.py: 홈 페이지 상단 인사말
     
     사용 예시:
-        GreetingCard("체력왕", scroll_target_id="exercise-selection")
+        GreetingCard("체력", scroll_target_id="exercise-selection")
     """
     card_id = "greeting-card"
     cursor_style = "cursor: pointer;"

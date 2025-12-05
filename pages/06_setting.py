@@ -1,12 +1,8 @@
 """설정 페이지"""
 import streamlit as st
 import re
-from utils.app_common import setup_common
 from components.common.section_card import SectionCard, CloseSectionCard
 from service import NotificationService, AuthService
-
-# 공통 설정 적용
-setup_common()
 
 
 def render(go_to):
@@ -183,11 +179,23 @@ def render(go_to):
    
    CloseSectionCard()
    st.markdown("---")
-
-
-
-# 페이지가 직접 실행될 때 렌더링
-if __name__ == "__main__" or not st.session_state.get('_rendered_by_app', False):
-   from utils.page_utils import run_page
-   run_page(render)
+   
+   # 내정보 수정 섹션
+   SectionCard("👤 내정보 수정")
+   st.markdown("프로필 정보를 수정할 수 있습니다.")
+   
+   if st.button("내정보 수정", use_container_width=True, type="primary", key="edit_profile"):
+      st.session_state["info_update_modal_open"] = True
+      st.rerun()
+   
+   CloseSectionCard()
+   st.markdown("---")
+   
+   # 내정보 수정 모달
+   if st.session_state.get("info_update_modal_open", False):
+      from components.common.modal import modal
+      from other_pages.info_update import render as render_info_update
+      
+      with modal("👤 내정보 수정", "info_update_modal", size="large"):
+         render_info_update(go_to)
 

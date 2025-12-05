@@ -82,7 +82,7 @@ def RankCard(rank: int, name: str, score: str):
     - pages/03_ranking.py: 랭킹 페이지의 상위 3명 표시
     
     사용 예시:
-        RankCard(rank=1, name="체력왕김철수", score="98점")
+        RankCard(rank=1, name="체력김철수", score="98점")
     """
     medal_emoji = "🥇" if rank == 1 else "🥈" if rank == 2 else "🥉" if rank == 3 else ""
     st.markdown(

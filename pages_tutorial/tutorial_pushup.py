@@ -1,11 +1,7 @@
 """팔굽혀펴기 튜토리얼 페이지"""
 import streamlit as st
-from utils.app_common import setup_common
 from components.common.section_card import section_card
 from data.constants_exercise import EXERCISES
-
-# 공통 설정 적용
-setup_common()
 
 def render(go_to):
     """팔굽혀펴기 튜토리얼 페이지 렌더링"""
@@ -78,7 +74,17 @@ def render(go_to):
     # -------------------------
     with col_right:
         with section_card("예시 영상 및 업로드", icon="📹", variant="default"):
-            st.info("올바른 자세는 아래 영상을 참고하거나, 직접 촬영한 영상을 업로드해 분석할 수 있습니다.")
+            st.text("올바른 자세는 아래 영상을 참고하거나, 직접 촬영한 영상을 업로드해 분석할 수 있습니다.")
+
+            youtube_url = "https://www.youtube.com/embed/HHRDXEG1YCU"
+            st.markdown(f"""
+                <iframe width="100%" height="350"
+                src="{youtube_url}"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+                </iframe>
+            """, unsafe_allow_html=True)
 
             # ⭐ 영상 업로드
             uploaded_file = st.file_uploader(
@@ -112,6 +118,6 @@ def render(go_to):
 
 
 # 페이지 직접 실행
-if __name__ == "__main__" or not st.session_state.get('_rendered_by_app', False):
+if __name__ == "__main__":
     from utils.page_utils import run_page
     run_page(render)
