@@ -102,11 +102,5 @@ def apply_global_css():
       """,
       unsafe_allow_html=True,
    )
-   st.markdown("""
-   <style>
-   div[data-testid="stVerticalBlock"] > div:empty {
-      display: none !important;
-   }
-   </style>
-   """, unsafe_allow_html=True)
+
 

@@ -23,9 +23,9 @@ class ResultService(BaseService):
         return None
     
     def create_result(self, result_id: str, session_id: str, user_id: str, event: str,
-                     raw_score: int, official_grade: str, percentile: int, tip: str,
-                     frames_analyzed: int, accuracy: float, speed: int,
-                     model_version: str = "v1.2.0") -> bool:
+                    raw_score: int, official_grade: str, percentile: int, tip: str,
+                    frames_analyzed: int, accuracy: float, speed: int,
+                    model_version: str = "v1.2.0") -> bool:
         """새 측정 결과를 생성합니다."""
         new_result = {
             "result_id": result_id,
