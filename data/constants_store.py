@@ -59,7 +59,7 @@ STORE_BADGES = [
         "situp",
         "squat",
         "balance",
-        "kneelift",
+        "knee_lift",
         "trunkFlex"
       ]
     },

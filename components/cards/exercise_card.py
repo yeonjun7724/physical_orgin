@@ -14,71 +14,6 @@ def ExerciseItemCard(
 ):
 
     # ---------------------------------------------------------
-    # CSS 한 번만 로딩
-    # ---------------------------------------------------------
-    if not st.session_state.get("_exercise_card_style_loaded_v2", False):
-        st.markdown("""
-        <style>
-        .exercise-card {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 1.2rem;
-            margin: 1.2rem 0;
-            border: 1px solid #e6e6e6;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-        }
-        .exercise-card-header {
-            display: flex;
-            gap: 1.2rem;
-            align-items: center;
-        }
-        /* 이미지 비율 강제: 4:3 */
-        .exercise-card-image {
-            width: 140px;
-            height: 105px;
-            border-radius: 12px;
-            object-fit: cover;
-            background: #f4f4f4;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-        }
-        .exercise-title {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #222;
-            margin: 0;
-            line-height: 1;
-        }
-        .exercise-desc {
-            margin-top: 0.4rem;
-            color: #555;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-        .exercise-meta {
-            display: flex;
-            justify-content: space-between;
-            margin: 1rem 0 1rem 0;
-            padding: 0.7rem 0;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-            font-size: 0.95rem;
-            color: #666;
-        }
-        div[data-testid="stButton"] > button[kind="primary"] {
-            background: linear-gradient(135deg, #4c84af, #5ba4c7) !important;
-            color: white !important;
-            border-radius: 10px !important;
-            font-size: 1rem !important;
-            font-weight: 700 !important;
-            padding: 0.7rem 1rem !important;
-            border: none !important;
-            width: 100% !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-        st.session_state["_exercise_card_style_loaded_v2"] = True
-
-    # ---------------------------------------------------------
     # 이미지 불러오기
     # ---------------------------------------------------------
     IMG_MAP = {
@@ -110,9 +45,10 @@ def ExerciseItemCard(
     # ---------------------------------------------------------
     st.markdown('<div class="exercise-card">', unsafe_allow_html=True)
 
+    # 첫 번째 행: 이미지와 정보를 2열로 배치
     col1, col2 = st.columns([1.1, 2.5], gap="medium")
 
-    # ---------------- 왼쪽 이미지 ----------------
+    # ---------------- 왼쪽 열: 이미지 ----------------
     with col1:
         if img_b64:
             st.markdown(
@@ -125,7 +61,7 @@ def ExerciseItemCard(
                 unsafe_allow_html=True
             )
 
-    # ---------------- 오른쪽 텍스트 ----------------
+    # ---------------- 오른쪽 열: 운동 이름, 설명, 시간/난이도 ----------------
     with col2:
         st.markdown(f'<div class="exercise-title">{name}</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="exercise-desc">{description}</div>', unsafe_allow_html=True)
@@ -138,8 +74,13 @@ def ExerciseItemCard(
             """,
             unsafe_allow_html=True
         )
-        if st.button("시작하기", key=f"start_{key}", type="primary", use_container_width=True):
-            if on_start:
-                on_start()
+
+    # 두 번째 행: 시작하기 버튼 (전체 너비)
+    # 버튼을 카드 div 안에 확실히 포함시키기 위해 컨테이너 사용
+    st.markdown('<div class="exercise-card-button-container">', unsafe_allow_html=True)
+    if st.button("시작하기", key=f"start_{key}", type="primary", use_container_width=True):
+        if on_start:
+            on_start()
+    st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("</div>", unsafe_allow_html=True)

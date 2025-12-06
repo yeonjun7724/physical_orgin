@@ -13,8 +13,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PAGES_TUTORIAL_DIR = os.path.join(BASE_DIR, "pages_tutorial")
 OTHER_PAGES_DIR = os.path.join(BASE_DIR, "other_pages")
 PAGES_AUTH_DIR = os.path.join(BASE_DIR, "pages_auth")
+PAGES_ANALYSIS_DIR = os.path.join(BASE_DIR, "pages_analysis")
 
-for path in [BASE_DIR, PAGES_TUTORIAL_DIR, OTHER_PAGES_DIR, PAGES_AUTH_DIR]:
+for path in [BASE_DIR, PAGES_TUTORIAL_DIR, OTHER_PAGES_DIR, PAGES_AUTH_DIR, PAGES_ANALYSIS_DIR]:
     if path not in sys.path:
         sys.path.insert(0, path)
 
@@ -30,7 +31,8 @@ info_update = confirm_to_info_update = None
 tutorial_pushup = tutorial_situp = tutorial_squat = None
 tutorial_balance = tutorial_knee_lift = tutorial_trunk_flex = None
 
-video_analysis_pushup = None
+video_analysis_pushup = video_analysis_situp = video_analysis_squat = None
+video_analysis_balance = video_analysis_knee_lift = video_analysis_trunk_flex = None
 
 
 
@@ -42,7 +44,8 @@ def _import_other_pages():
     global measure, result, signup, login, info_update, confirm_to_info_update
     global tutorial_pushup, tutorial_situp, tutorial_squat
     global tutorial_balance, tutorial_knee_lift, tutorial_trunk_flex
-    global video_analysis_pushup
+    global video_analysis_pushup, video_analysis_situp, video_analysis_squat
+    global video_analysis_balance, video_analysis_knee_lift, video_analysis_trunk_flex
 
     if measure is not None:
         return
@@ -67,7 +70,12 @@ def _import_other_pages():
         import pages_tutorial.tutorial_trunk_flex as tutorial_trunk_flex_mod
 
         # 분석 페이지
-        import pages_tutorial.video_analysis_pushup as video_analysis_pushup_mod
+        import pages_analysis.video_analysis_pushup as video_analysis_pushup_mod
+        import pages_analysis.video_analysis_situp as video_analysis_situp_mod
+        import pages_analysis.video_analysis_squat as video_analysis_squat_mod
+        import pages_analysis.video_analysis_balance as video_analysis_balance_mod
+        import pages_analysis.video_analysis_knee_lift as video_analysis_knee_lift_mod
+        import pages_analysis.video_analysis_trunk_flex as video_analysis_trunk_flex_mod
 
         # 주입
         measure = measure_mod
@@ -85,6 +93,11 @@ def _import_other_pages():
         tutorial_trunk_flex = tutorial_trunk_flex_mod
 
         video_analysis_pushup = video_analysis_pushup_mod
+        video_analysis_situp = video_analysis_situp_mod
+        video_analysis_squat = video_analysis_squat_mod
+        video_analysis_balance = video_analysis_balance_mod
+        video_analysis_knee_lift = video_analysis_knee_lift_mod
+        video_analysis_trunk_flex = video_analysis_trunk_flex_mod
 
     except Exception as e:
         st.warning(f"other_pages import 오류: {str(e)}")
@@ -195,6 +208,11 @@ def _render_other_page(page_name: str, go_to_cb):
         "tutorial_trunk_flex": tutorial_trunk_flex,
 
         "video_analysis_pushup": video_analysis_pushup,
+        "video_analysis_situp": video_analysis_situp,
+        "video_analysis_squat": video_analysis_squat,
+        "video_analysis_balance": video_analysis_balance,
+        "video_analysis_knee_lift": video_analysis_knee_lift,
+        "video_analysis_trunk_flex": video_analysis_trunk_flex,
     }
 
     module = page_map.get(page_name)

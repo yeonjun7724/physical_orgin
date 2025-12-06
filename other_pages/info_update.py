@@ -5,13 +5,16 @@ from components.common.section_card import SectionCard, CloseSectionCard
 from service import ProfileService
 from utils.page_utils import get_user_id
 
-def render(go_to):
-  """내정보 수정 페이지 렌더링"""
+def render_info_update_content(go_to=None):
+  """내정보 수정 내용 렌더링 (토글로 사용 가능)"""
   # 비밀번호 검증 확인 (페이지 내부에서 처리)
   if not st.session_state.get("info_update_verified", False):
     st.warning("비밀번호 확인이 필요합니다.")
-    if st.button("확인하러 가기", use_container_width=True):
-      go_to("confirm_to_info_update")
+    if st.button("설정으로 돌아가기", use_container_width=True, key="go_to_setting"):
+      if go_to:
+        go_to("setting")
+      else:
+        st.rerun()
     return
   
   user_id = get_user_id()
@@ -137,7 +140,7 @@ def render(go_to):
         gender_save = "M" if gender == "남성" else ("F" if gender == "여성" else "M")
         
         # ProfileService를 사용하여 profile_data.json에 저장
-        updates = {
+        profile_updates = {
             "nickname": user_name,
             "age_group": age_group_save,
             "gender": gender_save,
@@ -145,17 +148,30 @@ def render(go_to):
             "weight": weight
         }
         
-        success = profile_service.update_profile(user_id, updates)
+        profile_success = profile_service.update_profile(user_id, profile_updates)
         
-        if success:
+        # AuthService를 사용하여 auth_data.json의 name 필드도 업데이트
+        from service import AuthService
+        auth_service = AuthService()
+        auth_updates = {
+            "name": user_name
+        }
+        auth_success = auth_service.update_user(user_id, auth_updates)
+        
+        if profile_success and auth_success:
             # session_state도 업데이트 (호환성을 위해)
             st.session_state.user_name = user_name
             st.session_state.user_age = age_group
             st.session_state.user_gender = gender
             st.session_state.user_height = height
             st.session_state.user_weight = weight
+            st.session_state.info_update_verified = False  # 검증 상태 초기화
             st.success("프로필이 저장되었습니다!")
-            st.rerun()
+            # 설정 페이지로 이동
+            if go_to:
+                go_to("setting")
+            else:
+                st.rerun()
         else:
             st.error("프로필 저장 중 오류가 발생했습니다.")
   
@@ -163,26 +179,136 @@ def render(go_to):
   
   # 계정 삭제
   SectionCard("⚠️ 계정 삭제")
-  
-  st.markdown("### 계정 삭제")
   st.warning("⚠️ 계정을 삭제하면 모든 데이터가 영구적으로 삭제되며 복구할 수 없습니다.")
   
-  if st.button("계정 삭제", use_container_width=True, type="secondary"):
-    st.error("계정 삭제 기능은 준비 중입니다. 고객센터로 문의해주세요.")
+  # 계정 삭제 확인 상태
+  if "account_delete_confirm" not in st.session_state:
+    st.session_state["account_delete_confirm"] = False
+  
+  if not st.session_state["account_delete_confirm"]:
+    if st.button("계정 삭제", use_container_width=True, type="secondary", key="delete_account_btn"):
+      st.session_state["account_delete_confirm"] = True
+      st.rerun()
+  else:
+    st.error("⚠️ 정말로 계정을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다!")
+    confirm_text = st.text_input(
+      "계정 삭제를 확인하려면 '삭제'를 입력하세요",
+      key="delete_confirm_text"
+    )
+    
+    col1, col2 = st.columns(2)
+    with col1:
+      if st.button("삭제 확인", use_container_width=True, type="primary", key="confirm_delete_btn"):
+        if confirm_text == "삭제":
+          # 계정 삭제 실행
+          success = _delete_user_account(user_id)
+          if success:
+            st.success("계정이 삭제되었습니다.")
+            # 세션 초기화 및 로그아웃
+            st.session_state.clear()
+            if go_to:
+              go_to("login")
+            else:
+              st.rerun()
+          else:
+            st.error("계정 삭제 중 오류가 발생했습니다.")
+        else:
+          st.error("'삭제'를 정확히 입력해주세요.")
+    
+    with col2:
+      if st.button("취소", use_container_width=True, key="cancel_delete_btn"):
+        st.session_state["account_delete_confirm"] = False
+        st.rerun()
   
   CloseSectionCard()
+
+
+def _delete_user_account(user_id: str) -> bool:
+  """사용자 계정과 관련된 모든 데이터를 삭제합니다."""
+  import json
+  from pathlib import Path
+  
+  try:
+    # 프로젝트 루트 디렉토리 찾기
+    current_dir = Path(__file__).parent.parent
+    data_dir = current_dir / "data"
+    
+    # 1. auth_data.json - "id" 필드로 삭제
+    from service import AuthService
+    auth_service = AuthService()
+    auth_service.delete_user(user_id)
+    
+    # 2. profile_data.json - "user_id" 필드로 삭제
+    from service import ProfileService
+    profile_service = ProfileService()
+    profile_service.delete_profile(user_id)
+    
+    # 3. result_data.json - "user_id" 필드로 삭제 (results 배열 안)
+    result_file = data_dir / "result_data.json"
+    if result_file.exists():
+      with open(result_file, 'r', encoding='utf-8') as f:
+        result_data = json.load(f)
+        if "results" in result_data:
+          result_data["results"] = [r for r in result_data["results"] if r.get("user_id") != user_id]
+          with open(result_file, 'w', encoding='utf-8') as f:
+            json.dump(result_data, f, ensure_ascii=False, indent=2)
+    
+    # 4. measurement_data.json - "user_id" 필드로 삭제 (sessions 배열 안)
+    measurement_file = data_dir / "measurement_data.json"
+    if measurement_file.exists():
+      with open(measurement_file, 'r', encoding='utf-8') as f:
+        measurement_data = json.load(f)
+        if "sessions" in measurement_data:
+          measurement_data["sessions"] = [s for s in measurement_data["sessions"] if s.get("user_id") != user_id]
+          with open(measurement_file, 'w', encoding='utf-8') as f:
+            json.dump(measurement_data, f, ensure_ascii=False, indent=2)
+    
+    # 5. user_points_data.json - "user_id" 필드로 삭제
+    from service import PointsService
+    points_service = PointsService()
+    points_data = points_service.get_all()
+    points_data = [p for p in points_data if p.get("user_id") != user_id]
+    points_service._write_data(points_data)
+    
+    # 6. daily_streak_data.json - "user_id" 필드로 삭제
+    from service import StreakService
+    streak_service = StreakService()
+    streak_service.delete("user_id", user_id)
+    
+    # 7. user_badges_data.json - "user_id" 필드로 삭제 (여러 개일 수 있음)
+    from service.badge_service import UserBadgeService
+    badge_service = UserBadgeService()
+    user_badges = badge_service.get_user_badges(user_id)
+    for badge in user_badges:
+      badge_service.remove_badge(user_id, badge.get("badge_id"))
+    
+    # 8. inventory_data.json - "user_id" 필드로 삭제 (여러 개일 수 있음)
+    from service.purchase_service import InventoryService
+    inventory_service = InventoryService()
+    user_items = inventory_service.get_user_inventory(user_id)
+    for item in user_items:
+      inventory_service.remove_item(user_id, item.get("item_name"))
+    
+    # 9. notification_settings_data.json - "user_id" 필드로 삭제
+    from service import NotificationService
+    notification_service = NotificationService()
+    notification_service.delete("user_id", user_id)
+    
+    return True
+  except Exception as e:
+    print(f"계정 삭제 오류: {e}")
+    return False
+
+def render(go_to):
+  """내정보 수정 페이지 렌더링 (독립 페이지로 사용)"""
+  render_info_update_content(go_to)
   
   # 뒤로가기 버튼
   col1, col2 = st.columns(2)
   with col1:
     if st.button("← 설정으로 돌아가기", use_container_width=True):
         st.session_state.info_update_verified = False  # 검증 상태 초기화
-        # 모달이 열려있으면 모달 닫기
-        if st.session_state.get("info_update_modal_open", False):
-            st.session_state["info_update_modal_open"] = False
-            st.rerun()
-        else:
-            go_to("setting")
+        go_to("setting")
 
 
 # 페이지가 직접 실행될 때 렌더링

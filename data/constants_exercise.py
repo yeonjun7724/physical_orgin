@@ -328,7 +328,7 @@ GRADE_INFO = {
 EVENT_DISPLAY_NAME = {
     "pushup": "팔굽혀펴기",
     "situp": "윗몸일으키기",
-    "squat": "스쿼트 리듬",
+    "squat": "스쿼트",
     "balance": "외발서기",
     "knee_lift": "제자리 무릎들기",
     "trunk_flex": "상체 기울기"
@@ -371,7 +371,7 @@ EXERCISES = {
     },
 
     "squat": {
-        "name": "스쿼트 리듬",
+        "name": "스쿼트",
         "description": "하체 근력과 리듬감을 측정합니다",
         "tutorial_description": "하체 근력과 리듬감을 측정합니다",
         "duration_label": "약 1분",

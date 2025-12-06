@@ -5,7 +5,17 @@
     "email": "asdfasdf@gmail.com",
     "password_hash": "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892",
     "created_at": "2025-11-29T16:44:26.270429Z",
-    "last_login": "2025-12-05T14:52:07.313031Z",
+    "last_login": "2025-12-06T06:30:12.752740Z",
+    "provider": "local",
+    "is_active": true
+  },
+  {
+    "id": "user_강도도",
+    "name": "강도도",
+    "email": "dodo@gmail.com",
+    "password_hash": "2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892",
+    "created_at": "2025-12-05T15:00:31.477515Z",
+    "last_login": "2025-12-05T15:00:31.477515Z",
     "provider": "local",
     "is_active": true
   }

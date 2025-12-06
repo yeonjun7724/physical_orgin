@@ -23,6 +23,9 @@ def setup_common():
       margin-top: 0 !important;
       padding-top: 0 !important;
    }
+   div[data-testid="stVerticalBlock"] > div:empty {
+      display: none !important;
+   }
 
    </style>
    """, unsafe_allow_html=True)

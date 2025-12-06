@@ -7,6 +7,9 @@ def ProgressBar(label: str, current: int, total: int, reward_label: str = ""):
     progress = current / total if total > 0 else 0
     progress_percent = int(progress * 100)
     
+    # current가 0이면 "0"만 표시, 아니면 "current/total" 형식
+    display_text = "0" if current == 0 else f"{current}/{total}"
+    
     st.markdown(
         f"""
         <div style="padding: 1rem; background: #f9f9f9; border-radius: 8px; margin-bottom: 0.5rem;">
@@ -18,7 +21,7 @@ def ProgressBar(label: str, current: int, total: int, reward_label: str = ""):
                 <div style="background: linear-gradient(90deg, #4c84af, #81bfc7); height: 100%; width: {progress_percent}%; 
                             display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; 
                             transition: width 0.3s ease;">
-                    {current}/{total}
+                    {display_text}
                 </div>
             </div>
         </div>

@@ -20,7 +20,59 @@ def render(go_to):
       notification_service.initialize_settings(user_id)
       user_settings = notification_service.get_user_settings(user_id)
    
+   # 내정보 수정 섹션
+   SectionCard("👤 내정보 수정")
+   st.markdown("프로필 정보를 수정할 수 있습니다.")
+   
+   # 비밀번호 확인 상태 초기화
+   if "info_update_show_password" not in st.session_state:
+      st.session_state["info_update_show_password"] = False
+   
+   # 내정보 수정 버튼
+   if not st.session_state["info_update_show_password"]:
+      if st.button("내정보 수정", use_container_width=True, type="primary", key="edit_profile"):
+         st.session_state["info_update_show_password"] = True
+         st.rerun()
+   else:
+      # 비밀번호 확인 입력란
+      st.markdown("### 🔐 비밀번호 확인")
+      st.markdown("내정보를 수정하려면 비밀번호 확인이 필요합니다.")
+      
+      password = st.text_input(
+         "비밀번호",
+         type="password",
+         placeholder="비밀번호를 입력하세요",
+         key="info_update_password_input"
+      )
+      
+      col1, col2 = st.columns(2)
+      
+      with col1:
+         if st.button("확인", type="primary", use_container_width=True, key="info_update_confirm"):
+            if password:
+               # 비밀번호 검증
+               from utils.auth import hash_password
+               auth_service = AuthService()
+               current_user = auth_service.get_user_by_id(user_id)
+               
+               if current_user and current_user.get("password_hash") == hash_password(password):
+                  # 비밀번호 확인 성공
+                  st.session_state["info_update_verified"] = True
+                  st.session_state["info_update_show_password"] = False
+                  go_to("info_update")
+               else:
+                  st.error("비밀번호가 일치하지 않습니다.")
+            else:
+               st.error("비밀번호를 입력해주세요.")
+      
+      with col2:
+         if st.button("취소", use_container_width=True, key="info_update_cancel"):
+            st.session_state["info_update_show_password"] = False
+            st.rerun()
+   
+   CloseSectionCard()
    st.markdown("---")
+   
    # 이메일 설정 섹션
 
    SectionCard("📧 이메일 알림 설정")
@@ -170,6 +222,19 @@ def render(go_to):
          """,
          unsafe_allow_html=True
       )
+      # col2 내부 버튼 전체 너비 설정
+      st.markdown("""
+      <style>
+      div[data-testid="column"]:nth-of-type(2) div[data-testid="stButton"] {
+         width: 100% !important;
+         max-width: 100% !important;
+      }
+      div[data-testid="column"]:nth-of-type(2) div[data-testid="stButton"] > button {
+         width: 100% !important;
+         max-width: 100% !important;
+      }
+      </style>
+      """, unsafe_allow_html=True)
       if st.button("데이터 삭제", use_container_width=True, type="secondary", key="delete_data"):
          st.warning("⚠️ 이 작업은 되돌릴 수 없습니다!")
          confirm = st.checkbox("정말로 모든 데이터를 삭제하시겠습니까?", key="confirm_delete")
@@ -179,23 +244,4 @@ def render(go_to):
    
    CloseSectionCard()
    st.markdown("---")
-   
-   # 내정보 수정 섹션
-   SectionCard("👤 내정보 수정")
-   st.markdown("프로필 정보를 수정할 수 있습니다.")
-   
-   if st.button("내정보 수정", use_container_width=True, type="primary", key="edit_profile"):
-      st.session_state["info_update_modal_open"] = True
-      st.rerun()
-   
-   CloseSectionCard()
-   st.markdown("---")
-   
-   # 내정보 수정 모달
-   if st.session_state.get("info_update_modal_open", False):
-      from components.common.modal import modal
-      from other_pages.info_update import render as render_info_update
-      
-      with modal("👤 내정보 수정", "info_update_modal", size="large"):
-         render_info_update(go_to)
 

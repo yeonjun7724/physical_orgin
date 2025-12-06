@@ -29,15 +29,41 @@ def _quests_section():
    
    # 오늘의 측정 횟수 계산
    from datetime import datetime, date
-   today = date.today().isoformat()
-   today_results = [
-      r for r in result_service.get_results_by_user(user_id)
-      if r.get("created_at", "").startswith(today)
-   ]
+   today = date.today()
+   today_str = today.isoformat()
+   
+   # 오늘 날짜의 측정 결과 필터링
+   today_results = []
+   for r in result_service.get_results_by_user(user_id):
+      created_at = r.get("created_at", "")
+      if not created_at:
+         continue
+      
+      # ISO 형식 날짜 파싱 (Z 제거, 시간 부분 제거)
+      try:
+         # "2025-11-30T10:15:30" 또는 "2025-11-30T19:04:36.872254Z" 형식 처리
+         if "T" in created_at:
+            date_part = created_at.split("T")[0]
+         else:
+            date_part = created_at[:10]  # 처음 10자리만 (YYYY-MM-DD)
+         
+         result_date = datetime.fromisoformat(date_part).date()
+         if result_date == today:
+            today_results.append(r)
+      except (ValueError, AttributeError):
+         # 날짜 파싱 실패 시 startswith로 대체
+         if created_at.startswith(today_str):
+            today_results.append(r)
+   
    today_count = len(today_results)
    
    # 연속 측정 일수
    streak = streak_service.get_user_streak(user_id)
+   if not streak:
+      # streak 데이터가 없으면 초기화
+      streak_service.initialize_streak(user_id)
+      streak = streak_service.get_user_streak(user_id)
+   
    current_streak = streak.get("current_streak", 0) if streak else 0
    
    SectionCard("📋 오늘의 퀘스트")
@@ -114,9 +140,8 @@ def _recent_result_section():
    event_key_mapping = {
       "pushup": "팔굽혀펴기",
       "situp": "윗몸일으키기",
-      "squat": "스쿼트 리듬",
+      "squat": "스쿼트",
       "balance": "외발서기",
-      "kneelift": "제자리 무릎들기",
       "knee_lift": "제자리 무릎들기",
       "trunkFlex": "상체 기울기",
       "trunk_flex": "상체 기울기"
@@ -126,7 +151,7 @@ def _recent_result_section():
    all_exercises = {
       "pushup": "팔굽혀펴기",
       "situp": "윗몸일으키기",
-      "squat": "스쿼트 리듬",
+      "squat": "스쿼트",
       "balance": "외발서기",
       "knee_lift": "제자리 무릎들기",
       "trunk_flex": "상체 기울기"
@@ -174,8 +199,8 @@ def _recent_result_section():
       exercise_results = {}
       for result in results:
          event = result.get("event", "")
-         # 이벤트 키 정규화 (kneelift -> knee_lift, trunkFlex -> trunk_flex)
-         if event == "kneelift":
+         # 이벤트 키 정규화 (knee_lift -> knee_lift, trunkFlex -> trunk_flex)
+         if event == "knee_lift":
             event = "knee_lift"
          elif event == "trunkFlex":
             event = "trunk_flex"

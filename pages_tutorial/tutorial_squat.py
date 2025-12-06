@@ -1,10 +1,10 @@
-"""스쿼트 리듬 튜토리얼 페이지"""
+"""스쿼트 튜토리얼 페이지"""
 import streamlit as st
 from components.common.section_card import section_card
 from data.constants_exercise import EXERCISES
 
 def render(go_to):
-    """스쿼트 리듬 튜토리얼 페이지 렌더링"""
+    """스쿼트 튜토리얼 페이지 렌더링"""
     exercise_key = "squat"
     info = EXERCISES[exercise_key]
     exercise_name = info["name"]
@@ -44,13 +44,6 @@ def render(go_to):
                     st.markdown(f"**{idx}.**")
                 with col_text:
                     st.markdown(instruction)
-    
-    with col_right:
-        # 카메라 설정 섹션
-        with section_card("카메라 설정", icon="📷", variant="default"):
-            # 카메라 미리보기 영역
-
-            st.text("올바른 자세는 아래 영상을 참고하세요")
             youtube_url = "https://www.youtube.com/embed/aBP3x1N4Kjw"
             st.markdown(f"""
                 <iframe width="100%" height="350"
@@ -60,15 +53,37 @@ def render(go_to):
                 allowfullscreen>
                 </iframe>
             """, unsafe_allow_html=True)
+            st.info("올바른 자세는 위 영상을 참고하세요")
 
+    with col_right:
+        # 카메라 설정 섹션
+        with section_card("예시 영상 및 업로드", icon="📹", variant="default"):
+            # 카메라 미리보기 영역
+            # ⭐ 영상 업로드
+            uploaded_file = st.file_uploader(
+                "스쿼트 영상 업로드",
+                type=["mp4", "mov", "avi"],
+                key="squat_video_uploader"
+            )
+
+            if uploaded_file is not None:
+                st.success("영상이 업로드되었습니다!")
+                st.video(uploaded_file)
+        
+        # 분석 버튼 (section_card 밖으로 이동하여 col_right 전체 너비 사용)
+        if uploaded_file is not None:
+            if st.button("이 영상으로 자세 분석하기", type="primary", use_container_width=True, key="analyze_squat"):
+                st.session_state.uploaded_video = uploaded_file
+                st.session_state.selected_exercise = exercise_key
+
+                # -------------------------
+                # ⭐ 이동 경로 (중요!)
+                # -------------------------
+                go_to("video_analysis_squat")
+        else:
+            st.button("이 영상으로 자세 분석하기", type="secondary", use_container_width=True, key="analyze_squat", disabled=True)
 
     
-    # 측정 시작 버튼 (크게)
-    st.markdown("")  # 간격
-    if st.button("측정 시작", key="start_measure", type="primary", use_container_width=True):
-        st.session_state.selected_exercise = exercise_key
-        st.session_state.measure_started = True
-        go_to("measure")
 
 
 # 페이지가 직접 실행될 때 렌더링

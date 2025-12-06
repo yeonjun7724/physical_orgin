@@ -28,7 +28,7 @@ def _generate_mock_leaderboard(event: str, period: str, limit: int) -> list:
       "situp": (25, 70),
       "squat": (35, 85),
       "balance": (20, 60),
-      "kneelift": (40, 90),
+      "knee_lift": (40, 90),
       "trunkFlex": (15, 50)
    }
    
@@ -78,9 +78,9 @@ def render(go_to):
       "종합": "종합",
       "pushup": "팔굽혀펴기",
       "situp": "윗몸일으키기",
-      "squat": "스쿼트 리듬",
+      "squat": "스쿼트",
       "balance": "외발서기",
-      "kneelift": "제자리 무릎들기",
+      "knee_lift": "제자리 무릎들기",
       "trunkFlex": "상체 기울기"
    }
    
@@ -189,7 +189,7 @@ def render(go_to):
       "situp": "situp",
       "squat": "squat",
       "balance": "balance",
-      "kneelift": "knee_lift",
+      "knee_lift": "knee_lift",
       "trunkFlex": "trunk_flex"
    }
    event_key = event_key_mapping.get(event, event)
@@ -232,7 +232,7 @@ def render(go_to):
          event_results = [
             r for r in result_service.get_results_by_user(user_id)
             if r.get("event", "").lower() == event.lower() or 
-               (event == "kneelift" and r.get("event", "") in ["kneelift", "knee_lift"]) or
+               (event == "knee_lift" and r.get("event", "") in ["knee_lift", "knee_lift"]) or
                (event == "trunkFlex" and r.get("event", "") in ["trunkFlex", "trunk_flex"])
          ]
          if event_results:
@@ -284,14 +284,14 @@ def render(go_to):
    }
    period_key = period_mapping.get(period, "weekly")
    
-   # 이벤트 키 매핑 (종합 -> overall, kneelift -> knee_lift, trunkFlex -> trunk_flex)
+   # 이벤트 키 매핑 (종합 -> overall, knee_lift -> knee_lift, trunkFlex -> trunk_flex)
    event_key_mapping = {
       "종합": "overall",
       "pushup": "pushup",
       "situp": "situp",
       "squat": "squat",
       "balance": "balance",
-      "kneelift": "knee_lift",
+      "knee_lift": "knee_lift",
       "trunkFlex": "trunk_flex"
    }
    event_key = event_key_mapping.get(event, event)
